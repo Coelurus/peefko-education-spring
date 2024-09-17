@@ -3,12 +3,13 @@ package pfko.vopalensky.spring.repository;
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.Offer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Repository
 public class OfferRepository implements ObjectRepository<Offer> {
-    private List<Offer> offers;
+    private final List<Offer> offers = new ArrayList<>();
 
     @Override
     public void store(Offer offer) {

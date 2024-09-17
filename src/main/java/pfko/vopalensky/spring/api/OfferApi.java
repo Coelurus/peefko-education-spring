@@ -68,7 +68,7 @@ public interface OfferApi {
      * @param created  ID of worker/team that created this offer
      */
     @PostMapping(value = "/offer/{offerId}")
-    ResponseEntity<Void> updateOfferWithForm(
+    ResponseEntity<Offer> updateOfferWithForm(
             @PathVariable("offerId") Long offerId,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cost", required = false) Long cost,

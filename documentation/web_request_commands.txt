@@ -1,0 +1,9 @@
+ADD OFFER
+Invoke-WebRequest -Uri http://localhost:8080/offer -Method POST -ContentType "application/json" -Body '{ "id":1, "name":"Test", "cost":3000}' -Headers @{"accept"="application/json"}
+Invoke-WebRequest -Uri http://localhost:8080/offer -Method POST -ContentType "application/json" -Body '{ "id":0, "name":"Offer1", "cost":10}' -Headers @{"accept"="application/json"}
+
+GET OFFER 1
+Invoke-WebRequest -Uri http://localhost:8080/offer/1 -Method GET -Headers @{"accept"="application/json"}
+
+GET ALL OFFERS
+Invoke-WebRequest -Uri http://localhost:8080/board/offers -Method GET -Headers @{"accept"="application/json"}
