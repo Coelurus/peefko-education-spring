@@ -6,8 +6,6 @@ public class User {
     private String hashPassword;
     private StatusEnum status;
     private String name;
-    private String phone;
-    private String email;
 
     public enum StatusEnum {
         CUSTOMER("customer"),
@@ -36,14 +34,12 @@ public class User {
         }
     }
 
-    public User(long id, String userName, String hashPassword, StatusEnum status, String name, String phone, String email) {
+    public User(long id, String userName, String hashPassword, StatusEnum status, String name) {
         this.id = id;
         this.userName = userName;
         this.hashPassword = hashPassword;
         this.status = status;
         this.name = name;
-        this.phone = phone;
-        this.email = email;
     }
 
     public long getId() {
@@ -64,13 +60,5 @@ public class User {
 
     public String getName() {
         return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
     }
 }

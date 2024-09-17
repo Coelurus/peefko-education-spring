@@ -12,6 +12,11 @@ public class OrderRepository implements ObjectRepository<Order> {
 
     private final List<Order> orders = new ArrayList<>();
 
+    public OrderRepository() {
+        orders.add(new Order(0L, 1L, 0L));
+        orders.add(new Order(1L, 2L, 1L));
+    }
+
     @Override
     public void store(Order order) {
         orders.add(order);

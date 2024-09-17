@@ -11,6 +11,12 @@ import java.util.Objects;
 public class OfferRepository implements ObjectRepository<Offer> {
     private final List<Offer> offers = new ArrayList<>();
 
+    public OfferRepository() {
+        offers.add(new Offer(0L, "Security", 2000L));
+        offers.add(new Offer(1L, "All exclusive", 666L));
+        offers.add(new Offer(2L, "Home Page Button", 100000L));
+    }
+
     @Override
     public void store(Offer offer) {
         offers.add(offer);

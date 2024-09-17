@@ -19,9 +19,6 @@ public class BoardApiController implements BoardApi {
     private final HttpServletRequest request;
     private final OfferRepository offerRepository;
 
-    private static final String ACCEPT_HEADER = "Accept";
-    private static final String ACCEPT_TYPE = "application/json";
-
     @Autowired
     public BoardApiController(OfferRepository offerRepository, OrderRepository orderRepository, HttpServletRequest request) {
         this.orderRepository = orderRepository;
@@ -29,31 +26,16 @@ public class BoardApiController implements BoardApi {
         this.request = request;
     }
 
-    @Override
-    public ResponseEntity<List<Offer>> getOffers() {
-        List<Offer> offers = offerRepository.findAll();
-        return new ResponseEntity<>(offers, HttpStatus.OK);
-    }
 
     @Override
     public ResponseEntity<Order> placeOrder(Order order) {
-        String accept = request.getHeader(ACCEPT_HEADER);
-        if (accept != null && accept.contains(ACCEPT_TYPE)) {
-            try {
-                orderRepository.store(order);
-                return new ResponseEntity<>(order, HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>(order, HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-        } else {
-            return new ResponseEntity<>(order, HttpStatus.BAD_REQUEST);
-        }
+        return Helper.objectCreator(order, request, orderRepository);
     }
 
     @Override
     public ResponseEntity<Order> getOrderById(Long orderId) {
-        String accept = request.getHeader(ACCEPT_HEADER);
-        if (accept != null && accept.contains(ACCEPT_TYPE)) {
+        String accept = request.getHeader(Helper.ACCEPT_HEADER);
+        if (accept != null && accept.contains(Helper.ACCEPT_TYPE)) {
             try {
                 Order found = orderRepository.get(orderId);
                 if (found != null) {
@@ -70,8 +52,8 @@ public class BoardApiController implements BoardApi {
 
     @Override
     public ResponseEntity<Order> updateOrderWithForm(Long orderId, Boolean completed, Boolean payed) {
-        String accept = request.getHeader(ACCEPT_HEADER);
-        if (accept != null && accept.contains(ACCEPT_TYPE)) {
+        String accept = request.getHeader(Helper.ACCEPT_HEADER);
+        if (accept != null && accept.contains(Helper.ACCEPT_TYPE)) {
             try {
                 Order order = orderRepository.get(orderId);
                 if (order == null) {
