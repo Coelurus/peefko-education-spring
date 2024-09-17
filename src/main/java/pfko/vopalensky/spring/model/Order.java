@@ -1,20 +1,34 @@
 package pfko.vopalensky.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Order {
-    private long id;
-    private Offer offer;
-    private User customer;
+
+    @JsonProperty("id")
+    private final long id;
+
+    @JsonProperty("offerId")
+    private long offerId;
+
+    @JsonProperty("customerId")
+    private long customerId;
+
+    @JsonProperty("completed")
     private boolean completed;
+
+    @JsonProperty("payed")
     private boolean payed;
 
-    public Order(long id, Offer offer, User customer){
-        this(id, offer, customer, Boolean.FALSE, Boolean.FALSE);
+    public Order(@JsonProperty("id") long id,
+                 @JsonProperty("offerId") long offerId,
+                 @JsonProperty("customerId") long customerId) {
+        this(id, offerId, customerId, Boolean.FALSE, Boolean.FALSE);
     }
 
-    public Order(long id, Offer offer, User customer, boolean completed, boolean payed) {
+    public Order(long id, long offerId, long customerId, boolean completed, boolean payed) {
         this.id = id;
-        this.offer = offer;
-        this.customer = customer;
+        this.offerId = offerId;
+        this.customerId = customerId;
         this.completed = completed;
         this.payed = payed;
     }
@@ -23,12 +37,12 @@ public class Order {
         return id;
     }
 
-    public Offer getOffer() {
-        return offer;
+    public long getOfferId() {
+        return offerId;
     }
 
-    public User getCustomer() {
-        return customer;
+    public long getCustomerId() {
+        return customerId;
     }
 
     public boolean isCompleted() {
@@ -37,5 +51,21 @@ public class Order {
 
     public boolean isPayed() {
         return payed;
+    }
+
+    public void setOffer(long offer) {
+        this.offerId = offer;
+    }
+
+    public void setCustomer(long customer) {
+        this.customerId = customer;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public void setPayed(boolean payed) {
+        this.payed = payed;
     }
 }

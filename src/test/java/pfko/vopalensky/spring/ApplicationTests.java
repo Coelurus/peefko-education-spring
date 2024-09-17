@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -38,6 +37,11 @@ class ApplicationTests {
                     .content(s)
                     .header("Accept", "application/json"));
         }
+
+        mockMvc.perform(post("/board/order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"id\":1, \"offerId\":3, \"customerId\":7, \"completed\":true, \"payed\":false}")
+                .header("Accept", "application/json"));
     }
 
     @AfterEach
@@ -45,7 +49,7 @@ class ApplicationTests {
         for (int i = 0; i < 10; i++) {
             mockMvc.perform(delete("/offer/" + i));
         }
-
+        mockMvc.perform(delete("/board/order/1"));
     }
 
     @Test
@@ -56,26 +60,15 @@ class ApplicationTests {
                 .content(offerString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"Test\",\"cost\":3000,\"services\":null,\"createdBy\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"Test\",\"cost\":3000,\"services\":null,\"created\":null}"));
     }
-
-    /*
-    @Test
-    void addUnprocessableOffer() throws Exception {
-        mockMvc.perform(post("/offer")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"id\":422, \"cost\":\"price\", \"label\":\"EPic label\"}")
-                        .header("Accept", "application/json"))
-                .andExpect(status().isUnprocessableEntity());
-    }
-    */
 
     @Test
     void getOfferById() throws Exception {
         ResultActions result = mockMvc.perform(get("/offer/1")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"Offer\",\"cost\":123,\"services\":null,\"createdBy\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"Offer\",\"cost\":123,\"services\":null,\"created\":null}"));
     }
 
     @Test
@@ -89,6 +82,9 @@ class ApplicationTests {
     void deleteOffer() throws Exception {
         ResultActions results = mockMvc.perform(delete("/offer/1"));
         results.andExpect(status().isOk());
+        mockMvc.perform(get("/offer/1")
+                        .header("Accept", "application/json"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -98,7 +94,7 @@ class ApplicationTests {
                 .param("cost", "1001")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":null,\"createdBy\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":null,\"created\":null}"));
     }
 
     @Test
@@ -109,6 +105,53 @@ class ApplicationTests {
                 .content(offerString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":null,\"createdBy\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":null,\"created\":null}"));
     }
+
+    @Test
+    void testGetOffers() throws Exception {
+        ResultActions result = mockMvc.perform(get("/board/offers")
+                .header("Accept", "application/json"));
+        result.andExpect(status().isOk())
+                .andExpect(content().string("[{\"id\":0,\"name\":\"Test\",\"cost\":999,\"services\":null,\"created\":null},{\"id\":1,\"name\":\"Offer\",\"cost\":123,\"services\":null,\"created\":null},{\"id\":2,\"name\":\"Dont miss\",\"cost\":1000,\"services\":null,\"created\":null},{\"id\":3,\"name\":\"ALL\",\"cost\":30000,\"services\":null,\"created\":null}]"));
+    }
+
+    @Test
+    void testPlaceOrder() throws Exception {
+        String orderString = "{ \"id\":1, \"offerId\":3, \"customerId\":7, \"completed\":true, \"payed\":false}";
+        ResultActions result = mockMvc.perform(post("/board/order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderString)
+                .header("Accept", "application/json"));
+        result.andExpect(status().isOk())
+                .andExpect(content().string("{\"id\":1,\"offerId\":3,\"customerId\":7,\"completed\":true,\"payed\":false}"));
+    }
+
+    @Test
+    void testGetOrderById() throws Exception {
+        mockMvc.perform(get("/board/order/1")
+                        .header("Accept", "application/json"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"id\":1,\"offerId\":3,\"customerId\":7,\"completed\":true,\"payed\":false}"));
+    }
+
+    @Test
+    void testUpdateOrderWithForm() throws Exception {
+        ResultActions result = mockMvc.perform(post("/board/order/1")
+                .param("complete", "true")
+                .param("payed", "true")
+                .header("Accept", "application/json"));
+        result.andExpect(status().isOk())
+                .andExpect(content().string("{\"id\":1,\"offerId\":3,\"customerId\":7,\"completed\":true,\"payed\":true}"));
+    }
+
+    @Test
+    void testDeleteOrder() throws Exception {
+        mockMvc.perform(delete("/board/order/1"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/board/order/1")
+                        .header("Accept", "application/json"))
+                .andExpect(status().isNotFound());
+    }
+
 }

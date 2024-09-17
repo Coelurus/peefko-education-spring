@@ -1,6 +1,5 @@
 package pfko.vopalensky.spring.api;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,9 +54,10 @@ public interface BoardApi {
      * @param orderId   ID of an order that needs to be updated
      * @param completed State of completion of an order
      * @param payed     Payment status of an order
+     * @return Updated order object
      */
     @PostMapping(value = "/order/{orderId}")
-    ResponseEntity<Void> updateOrderWithForm(
+    ResponseEntity<Order> updateOrderWithForm(
             @PathVariable("orderId") Long orderId,
             @RequestParam(value = "complete", required = false)
             Boolean completed,
