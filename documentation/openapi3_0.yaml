@@ -175,6 +175,15 @@ paths:
           schema:
             $ref: "#/components/schemas/User"
       responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Offer"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Offer"
         "400":
           description: Invalid input
       security:
@@ -208,7 +217,7 @@ paths:
       tags:
         - board
       summary: Place an order for an offer
-      description: Place a new irder for an offer on a board
+      description: Place a new order for an offer on a board
       operationId: placeOrder
       requestBody:
         content:

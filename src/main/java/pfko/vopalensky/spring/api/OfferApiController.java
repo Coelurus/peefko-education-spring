@@ -10,7 +10,6 @@ import pfko.vopalensky.spring.model.Service;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.repository.OfferRepository;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -47,6 +46,7 @@ public class OfferApiController implements OfferApi {
         }
     }
 
+
     /**
      * Update an existing offer by ID
      *
@@ -81,12 +81,8 @@ public class OfferApiController implements OfferApi {
      */
     @Override
     public ResponseEntity<Void> deleteOffer(Long offerId) {
-        try {
-            offerRepository.delete(offerId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        offerRepository.delete(offerId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -123,7 +119,7 @@ public class OfferApiController implements OfferApi {
      * @param created  ID of worker/team that created this offer
      */
     @Override
-    public ResponseEntity<Void> updateOfferWithForm(Long offerId, String name, Long cost, List<Service> services, User created) {
+    public ResponseEntity<Offer> updateOfferWithForm(Long offerId, String name, Long cost, List<Service> services, User created) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -143,7 +139,7 @@ public class OfferApiController implements OfferApi {
                 if (created != null) {
                     toChange.setCreatedBy(created);
                 }
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(toChange, HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
