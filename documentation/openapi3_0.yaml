@@ -452,10 +452,10 @@ components:
           example: 10
 
         offerId:
-          $ref: "#/components/schemas/Offer"
+          $ref: "#/components/schemas/Offer/properties/id"
 
         customerId:
-          $ref: "#/components/schemas/User"
+          $ref: "#/components/schemas/User/properties/id"
 
         complete:
           type: boolean

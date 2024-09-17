@@ -18,6 +18,9 @@ public class OfferApiController implements OfferApi {
     private final OfferRepository offerRepository;
     private final HttpServletRequest request;
 
+    private static final String ACCEPT_TYPE = "application/json";
+    private static final String ACCEPT_HEADER = "Accept";
+
 
     @Autowired
     public OfferApiController(OfferRepository offerRepository, HttpServletRequest request) {
@@ -33,8 +36,8 @@ public class OfferApiController implements OfferApi {
      */
     @Override
     public ResponseEntity<Offer> addOffer(Offer offer) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(ACCEPT_TYPE)) {
             try {
                 offerRepository.store(offer);
                 return new ResponseEntity<>(offer, HttpStatus.OK);
@@ -55,8 +58,8 @@ public class OfferApiController implements OfferApi {
      */
     @Override
     public ResponseEntity<Offer> updateOffer(Offer offer) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(ACCEPT_TYPE)) {
             try {
                 Offer toChange = offerRepository.get(offer.getId());
                 if (toChange == null) {
@@ -93,8 +96,8 @@ public class OfferApiController implements OfferApi {
      */
     @Override
     public ResponseEntity<Offer> getOfferById(Long offerId) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(ACCEPT_TYPE)) {
             try {
                 Offer found = offerRepository.get(offerId);
                 if (found != null) {
@@ -120,8 +123,8 @@ public class OfferApiController implements OfferApi {
      */
     @Override
     public ResponseEntity<Offer> updateOfferWithForm(Long offerId, String name, Long cost, List<Service> services, User created) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(ACCEPT_TYPE)) {
             try {
                 Offer toChange = offerRepository.get(offerId);
                 if (toChange == null) {

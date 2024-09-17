@@ -1,12 +1,23 @@
 package pfko.vopalensky.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class Offer {
+    @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("cost")
     private Long cost;
+
+    @JsonProperty("services")
     private List<Service> services;
+
+    @JsonProperty("created")
     private User createdBy;
 
     public Offer(Long id, String name, Long cost) {
