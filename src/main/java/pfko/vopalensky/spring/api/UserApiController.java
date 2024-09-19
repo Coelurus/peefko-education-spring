@@ -1,7 +1,5 @@
 package pfko.vopalensky.spring.api;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,21 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 import pfko.vopalensky.spring.security.UserController;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.repository.UserRepository;
+import pfko.vopalensky.spring.service.Helper;
 
 @RestController
 public class UserApiController {
     private final UserController userController;
     private final UserRepository userRepository;
-    private final HttpServletRequest request;
 
 
     @Autowired
     public UserApiController(UserController userController,
-                             UserRepository userRepository,
-                             HttpServletRequest request, HttpSession httpSession) {
+                             UserRepository userRepository) {
         this.userController = userController;
         this.userRepository = userRepository;
-        this.request = request;
     }
 
     /**
@@ -35,7 +31,7 @@ public class UserApiController {
      */
     @PostMapping(value = "/user")
     public ResponseEntity<User> createUser(User user) {
-        return Helper.objectCreator(user, request, userRepository);
+        return Helper.objectCreator(user, userRepository);
     }
 
     /**

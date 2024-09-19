@@ -23,11 +23,9 @@ public class Order {
 
     public Order(@JsonProperty("id") long id,
                  @JsonProperty("offerId") long offerId,
-                 @JsonProperty("customerId") long customerId) {
-        this(id, offerId, customerId, Boolean.FALSE, Boolean.FALSE);
-    }
-
-    public Order(long id, long offerId, long customerId, boolean completed, boolean payed) {
+                 @JsonProperty("customerId") long customerId,
+                 @JsonProperty("completed") boolean completed,
+                 @JsonProperty("payed") boolean payed) {
         this.id = id;
         this.offerId = offerId;
         this.customerId = customerId;

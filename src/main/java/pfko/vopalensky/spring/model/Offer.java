@@ -22,7 +22,7 @@ public class Offer {
     @JsonProperty("created")
     private User createdBy;
 
-    public Offer(Long id, String name, Long cost) {
+    public Offer(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("cost") Long cost) {
         this.id = id;
         this.name = name;
         this.cost = cost;

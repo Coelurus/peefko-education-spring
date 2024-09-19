@@ -2,6 +2,8 @@ package pfko.vopalensky.spring.repository;
 
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.Offer;
+import pfko.vopalensky.spring.response.OfferResponse;
+import pfko.vopalensky.spring.response.OrderResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +41,10 @@ public class OfferRepository implements ObjectRepository<Offer> {
     @Override
     public List<Offer> findAll() {
         return offers;
+    }
+
+    @Override
+    public List<OfferResponse> getResponses() {
+        return offers.stream().map(OfferResponse::new).toList();
     }
 }

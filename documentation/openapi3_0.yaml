@@ -83,6 +83,26 @@ paths:
         - offer_board_auth:
             - write:offers
             - read:offers
+    get:
+      tags:
+        - offer
+      summary: Returns offers
+      description: Returns a list of offers
+      operationId: getOffers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Offer"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Offer"
   /offer/{offerId}:
     get:
       tags:
@@ -115,7 +135,6 @@ paths:
       security:
         - offer_board_auth:
             - read:offers
-
     delete:
       tags:
         - offer
@@ -190,14 +209,12 @@ paths:
         - offer_board_auth:
             - write:offers
             - read:offers
-
-  /board/offers:
+  /order:
     get:
       tags:
         - board
-      summary: Returns offers
-      description: Returns a list of offers
-      operationId: getOffers
+      summary: Get all orders
+      operationId: getOrders
       responses:
         "200":
           description: successful operation
@@ -206,13 +223,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Offer"
+                  $ref: "#/components/schemas/Order"
             application/xml:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Offer"
-  /board/order:
+                  $ref: "#/components/schemas/Order"
     post:
       tags:
         - board
@@ -229,7 +245,7 @@ paths:
               $ref: "#/components/schemas/Order"
       responses:
         "200":
-          description: succesfful operation
+          description: successful operation
           content:
             application/json:
               schema:
@@ -241,7 +257,7 @@ paths:
           description: Invalid input
         "422":
           description: Validation exception
-  /board/order/{orderId}:
+  /order/{orderId}:
     get:
       tags:
         - board
@@ -316,7 +332,6 @@ paths:
       responses:
         "400":
           description: Invalid input
-
   /user:
     post:
       tags:
@@ -343,7 +358,6 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/User"
-
   /login:
     get:
       tags:
@@ -380,14 +394,13 @@ paths:
                 type: string
         "400":
           description: Invalid username/password supplied
-
   /logout:
     get:
       tags:
         - user
       summary: Logs out current logged in user session
       operationId: logoutUser
-      parameters: []
+      parameters: [ ]
       responses:
         default:
           description: successful operation
@@ -502,7 +515,7 @@ components:
           example: 89q33rh9OAOa39R
         status:
           type: string
-          enum: [customer, supplier]
+          enum: [ customer, supplier ]
         name:
           type: string
           example: Mardi Mareda

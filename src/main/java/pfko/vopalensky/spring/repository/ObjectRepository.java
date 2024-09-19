@@ -1,5 +1,7 @@
 package pfko.vopalensky.spring.repository;
 
+import pfko.vopalensky.spring.response.OrderResponse;
+
 import java.util.List;
 
 /**
@@ -38,4 +40,11 @@ public interface ObjectRepository<T> {
      * @return List of all items in repo
      */
     public List<T> findAll();
+
+    /**
+     * Get response objects
+     *
+     * @return list of response objects
+     */
+    public List<?> getResponses();
 }
