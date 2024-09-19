@@ -1,23 +1,22 @@
 package pfko.vopalensky.spring.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pfko.vopalensky.spring.model.Order;
-import pfko.vopalensky.spring.repository.OrderRepository;
 import pfko.vopalensky.spring.response.OrderResponse;
+import pfko.vopalensky.spring.service.OrderService;
 
 import java.util.List;
 
 @RestController
 public class OrderApiController {
 
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderApiController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderApiController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     /**
@@ -27,8 +26,7 @@ public class OrderApiController {
      */
     @GetMapping(value = "/order", produces = "application/json")
     public ResponseEntity<List<OrderResponse>> getOrders() {
-        List<OrderResponse> orders = orderRepository.getResponses();
-        return ResponseEntity.ok(orders);
+        return orderService.getOrders();
     }
 
     /**
@@ -39,12 +37,7 @@ public class OrderApiController {
      */
     @PostMapping(value = "/order", consumes = "application/json", produces = "application/json")
     public ResponseEntity<OrderResponse> placeOrder(@RequestBody Order order) {
-        try {
-            orderRepository.store(order);
-            return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+        return orderService.placeOrder(order);
     }
 
     /**
@@ -55,16 +48,7 @@ public class OrderApiController {
      */
     @GetMapping(value = "/order/{orderId}", produces = "application/json")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable("orderId") Long orderId) {
-        try {
-            Order found = orderRepository.get(orderId);
-            if (found != null) {
-                return new ResponseEntity<>(new OrderResponse(found), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return orderService.getOrderById(orderId);
     }
 
     /**
@@ -80,17 +64,7 @@ public class OrderApiController {
             @PathVariable("orderId") Long orderId,
             @RequestParam(value = "complete", required = false) Boolean completed,
             @RequestParam(value = "payed", required = false) Boolean payed) {
-        try {
-            Order order = orderRepository.get(orderId);
-            if (order == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            order.setCompleted(completed);
-            order.setPayed(payed);
-            return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return orderService.updateOrderWithForm(orderId, completed, payed);
     }
 
     /**
@@ -100,7 +74,6 @@ public class OrderApiController {
      */
     @DeleteMapping(value = "/order/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable("orderId") Long orderId) {
-        orderRepository.delete(orderId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return orderService.deleteOrder(orderId);
     }
 }

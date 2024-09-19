@@ -124,7 +124,8 @@ class ApplicationTests {
                 .content(orderString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"offerId\":3,\"customerId\":7,\"completed\":true,\"payed\":false}"));
+                .andExpect(content().string("{\"id\":222,\"offerId\":440,\"customerId\":74,\"completed\":true," +
+                        "\"payed\":false}"));
     }
 
     @Test
