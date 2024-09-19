@@ -1,7 +1,9 @@
 package pfko.vopalensky.spring.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class Order {
 
     @JsonProperty("id")
@@ -30,42 +32,6 @@ public class Order {
         this.offerId = offerId;
         this.customerId = customerId;
         this.completed = completed;
-        this.payed = payed;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public long getOfferId() {
-        return offerId;
-    }
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public boolean isPayed() {
-        return payed;
-    }
-
-    public void setOffer(long offer) {
-        this.offerId = offer;
-    }
-
-    public void setCustomer(long customer) {
-        this.customerId = customer;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public void setPayed(boolean payed) {
         this.payed = payed;
     }
 }
