@@ -17,6 +17,14 @@ import java.util.List;
 
 @RestController
 public interface OfferApi {
+    
+    /**
+     * Returns a list of all offers
+     *
+     * @return List of all offers
+     */
+    @GetMapping(value = "/offer")
+    ResponseEntity<List<Offer>> getOffers();
 
     /**
      * Create new offer
@@ -24,9 +32,7 @@ public interface OfferApi {
      * @param offer New offer
      * @return Newly created offer
      */
-    @PostMapping(value = "/offer",
-            produces = {"application/json", "application/xml"},
-            consumes = {"application/json", "application/xml"})
+    @PostMapping(value = "/offer")
     ResponseEntity<Offer> addOffer(@RequestBody Offer offer);
 
     /**
@@ -35,9 +41,7 @@ public interface OfferApi {
      * @param offer Updated existing offer on board
      * @return Newly updated offer
      */
-    @PutMapping(value = "/offer",
-            produces = {"application/json", "application/xml"},
-            consumes = {"application/json", "application/xml"})
+    @PutMapping(value = "/offer")
     ResponseEntity<Offer> updateOffer(@RequestBody Offer offer);
 
     /**
@@ -54,8 +58,7 @@ public interface OfferApi {
      * @param offerId ID of an offer to return
      * @return Found offer
      */
-    @GetMapping(value = "/offer/{offerId}",
-            produces = {"application/json", "application/xml"})
+    @GetMapping(value = "/offer/{offerId}")
     ResponseEntity<Offer> getOfferById(@PathVariable("offerId") Long offerId);
 
     /**

@@ -38,7 +38,7 @@ class ApplicationTests {
                     .header("Accept", "application/json"));
         }
 
-        mockMvc.perform(post("/board/order")
+        mockMvc.perform(post("/order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{ \"id\":1, \"offerId\":3, \"customerId\":7, \"completed\":true, \"payed\":false}")
                 .header("Accept", "application/json"));
@@ -49,7 +49,7 @@ class ApplicationTests {
         for (int i = 0; i < 10; i++) {
             mockMvc.perform(delete("/offer/" + i));
         }
-        mockMvc.perform(delete("/board/order/1"));
+        mockMvc.perform(delete("/order/1"));
     }
 
     @Test
@@ -110,7 +110,7 @@ class ApplicationTests {
 
     @Test
     void testGetOffers() throws Exception {
-        ResultActions result = mockMvc.perform(get("/board/offers")
+        ResultActions result = mockMvc.perform(get("/offer")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
                 .andExpect(content().string("[{\"id\":0,\"name\":\"Test\",\"cost\":999,\"services\":null,\"created\":null},{\"id\":1,\"name\":\"Offer\",\"cost\":123,\"services\":null,\"created\":null},{\"id\":2,\"name\":\"Dont miss\",\"cost\":1000,\"services\":null,\"created\":null},{\"id\":3,\"name\":\"ALL\",\"cost\":30000,\"services\":null,\"created\":null}]"));
@@ -119,7 +119,7 @@ class ApplicationTests {
     @Test
     void testPlaceOrder() throws Exception {
         String orderString = "{ \"id\":1, \"offerId\":3, \"customerId\":7, \"completed\":true, \"payed\":false}";
-        ResultActions result = mockMvc.perform(post("/board/order")
+        ResultActions result = mockMvc.perform(post("/order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderString)
                 .header("Accept", "application/json"));
@@ -129,7 +129,7 @@ class ApplicationTests {
 
     @Test
     void testGetOrderById() throws Exception {
-        mockMvc.perform(get("/board/order/1")
+        mockMvc.perform(get("/order/1")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"id\":1,\"offerId\":3,\"customerId\":7,\"completed\":true,\"payed\":false}"));
@@ -137,7 +137,7 @@ class ApplicationTests {
 
     @Test
     void testUpdateOrderWithForm() throws Exception {
-        ResultActions result = mockMvc.perform(post("/board/order/1")
+        ResultActions result = mockMvc.perform(post("/order/1")
                 .param("complete", "true")
                 .param("payed", "true")
                 .header("Accept", "application/json"));
@@ -147,7 +147,7 @@ class ApplicationTests {
 
     @Test
     void testDeleteOrder() throws Exception {
-        mockMvc.perform(delete("/board/order/1"))
+        mockMvc.perform(delete("/order/1"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/board/order/1")
                         .header("Accept", "application/json"))

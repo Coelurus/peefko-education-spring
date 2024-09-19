@@ -344,7 +344,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
-  /user/login:
+  /login:
     get:
       tags:
         - user
@@ -381,7 +381,7 @@ paths:
         "400":
           description: Invalid username/password supplied
 
-  /user/logout:
+  /logout:
     get:
       tags:
         - user

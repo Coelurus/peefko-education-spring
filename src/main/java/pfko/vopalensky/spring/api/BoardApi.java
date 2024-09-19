@@ -15,17 +15,8 @@ import pfko.vopalensky.spring.model.Order;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/board")
 public interface BoardApi {
 
-    /**
-     * Returns a list of all offers
-     *
-     * @return List of all offers
-     */
-    @GetMapping(value = "/offers",
-            produces = {"application/json", "application/xml"})
-    ResponseEntity<List<Offer>> getOffers();
 
     /**
      * Place a new order for an offer on a board
@@ -33,9 +24,7 @@ public interface BoardApi {
      * @param order new order
      * @return newly created order
      */
-    @PostMapping(value = "/order",
-            produces = {"application/json", "application/xml"},
-            consumes = {"application/json", "application/xml"})
+    @PostMapping(value = "/order")
     ResponseEntity<Order> placeOrder(@RequestBody Order order);
 
     /**
@@ -44,8 +33,7 @@ public interface BoardApi {
      * @param orderId ID of order to be fetched
      * @return Found order
      */
-    @GetMapping(value = "/order/{orderId}",
-            produces = {"application/json", "application/xml"})
+    @GetMapping(value = "/order/{orderId}")
     ResponseEntity<Order> getOrderById(@PathVariable("orderId") Long orderId);
 
     /**

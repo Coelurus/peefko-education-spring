@@ -17,9 +17,7 @@ public interface UserApi {
      * @param user Created user object
      * @return Newly created user
      */
-    @PostMapping(value = "/",
-            produces = {"application/json", "application/xml"},
-            consumes = {"application/json", "application/xml"})
+    @PostMapping(value = "/user")
     ResponseEntity<User> createUser(@RequestBody User user);
 
     /**
@@ -28,8 +26,7 @@ public interface UserApi {
      * @param username The username for loginUser
      * @param password The password for loginUser
      */
-    @GetMapping(value = "/login",
-            produces = {"application/json", "application/xml"})
+    @GetMapping(value = "/login")
     ResponseEntity<Void> loginUser(
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "password", required = false) String password
