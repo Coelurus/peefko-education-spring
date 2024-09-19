@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pfko.vopalensky.spring.error.exception.FieldValidationException;
+import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Order;
 import pfko.vopalensky.spring.repository.OrderRepository;
 import pfko.vopalensky.spring.response.OrderResponse;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class OrderService {
+
+    private static final String SCOPE = "Order";
 
     private final OrderRepository orderRepository;
 
@@ -41,7 +45,7 @@ public class OrderService {
             orderRepository.store(order);
             return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new FieldValidationException(SCOPE);
         }
     }
 
@@ -57,10 +61,10 @@ public class OrderService {
             if (found != null) {
                 return new ResponseEntity<>(new OrderResponse(found), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                throw new NotFoundException(SCOPE);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new FieldValidationException(SCOPE);
         }
     }
 
@@ -76,13 +80,13 @@ public class OrderService {
         try {
             Order order = orderRepository.get(orderId);
             if (order == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                throw new NotFoundException(SCOPE);
             }
             order.setCompleted(completed);
             order.setPayed(payed);
             return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new FieldValidationException(SCOPE);
         }
     }
 

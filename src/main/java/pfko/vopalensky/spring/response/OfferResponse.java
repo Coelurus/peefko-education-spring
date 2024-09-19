@@ -1,6 +1,7 @@
 package pfko.vopalensky.spring.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.Service;
 import pfko.vopalensky.spring.model.User;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+@Getter
 @AllArgsConstructor
 public class OfferResponse {
     @JsonProperty("id")

@@ -1,7 +1,5 @@
 package pfko.vopalensky.spring.repository;
 
-import pfko.vopalensky.spring.response.OrderResponse;
-
 import java.util.List;
 
 /**
@@ -16,7 +14,7 @@ public interface ObjectRepository<T> {
      *
      * @param t item to store
      */
-    public void store(T t);
+    void store(T t);
 
     /**
      * Get item from repo at ID.
@@ -24,7 +22,7 @@ public interface ObjectRepository<T> {
      * @param id ID of item to return
      * @return found item if item with this ID exists. Otherwise null
      */
-    public T get(Long id);
+    T get(Long id);
 
     /**
      * Delete item at ID.
@@ -32,19 +30,12 @@ public interface ObjectRepository<T> {
      * @param id ID of item to delete
      * @return Deleted item
      */
-    public T delete(Long id);
+    T delete(Long id);
 
     /**
      * Get all items from repo
      *
      * @return List of all items in repo
      */
-    public List<T> findAll();
-
-    /**
-     * Get response objects
-     *
-     * @return list of response objects
-     */
-    public List<?> getResponses();
+    List<T> findAll();
 }

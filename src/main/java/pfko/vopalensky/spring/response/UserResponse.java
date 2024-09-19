@@ -2,9 +2,11 @@ package pfko.vopalensky.spring.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
 import pfko.vopalensky.spring.model.StatusEnum;
 import pfko.vopalensky.spring.model.User;
 
+@Getter
 @Data
 public class UserResponse {
     @JsonProperty("id")

@@ -5,7 +5,7 @@ public enum StatusEnum {
 
     SUPPLIER("supplier");
 
-    private String value;
+    private final String value;
 
 
     StatusEnum(String value) {

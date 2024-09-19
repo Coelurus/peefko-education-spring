@@ -1,7 +1,6 @@
 package pfko.vopalensky.spring.repository;
 
 import org.springframework.stereotype.Repository;
-import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.StatusEnum;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.response.UserResponse;
@@ -46,7 +45,6 @@ public class UserRepository implements ObjectRepository<User> {
         return users;
     }
 
-    @Override
     public List<UserResponse> getResponses() {
         return users.stream().map(UserResponse::new).toList();
     }

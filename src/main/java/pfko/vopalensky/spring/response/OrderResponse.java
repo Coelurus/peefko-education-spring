@@ -2,8 +2,10 @@ package pfko.vopalensky.spring.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import pfko.vopalensky.spring.model.Order;
 
+@Getter
 @AllArgsConstructor
 public class OrderResponse {
     @JsonProperty("id")

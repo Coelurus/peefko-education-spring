@@ -1,13 +1,11 @@
 package pfko.vopalensky.spring.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.Service;
 import pfko.vopalensky.spring.model.User;
-import pfko.vopalensky.spring.repository.OfferRepository;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.service.OfferService;
 
@@ -17,9 +15,9 @@ import java.util.List;
 public class OfferApiController {
 
     private final OfferService offerService;
-    
+
     @Autowired
-    public OfferApiController(OfferRepository offerRepository, OfferService offerService) {
+    public OfferApiController(OfferService offerService) {
         this.offerService = offerService;
     }
 

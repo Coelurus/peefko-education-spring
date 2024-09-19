@@ -1,16 +1,13 @@
 package pfko.vopalensky.spring.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pfko.vopalensky.spring.response.UserResponse;
-import pfko.vopalensky.spring.security.UserController;
 import pfko.vopalensky.spring.model.User;
-import pfko.vopalensky.spring.repository.UserRepository;
 import pfko.vopalensky.spring.service.UserService;
 
 @RestController
