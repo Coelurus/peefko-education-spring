@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 public class OfferService {
+    private static final String SCOPE = "Offer";
 
     private final OfferRepository offerRepository;
 
@@ -41,7 +42,7 @@ public class OfferService {
             offerRepository.store(offer);
             return new ResponseEntity<>(new OfferResponse(offer), HttpStatus.OK);
         } catch (Exception e) {
-            throw new FieldValidationException("Offer");
+            throw new FieldValidationException(SCOPE);
         }
     }
 
@@ -55,7 +56,7 @@ public class OfferService {
         try {
             Offer toChange = offerRepository.get(offer.getId());
             if (toChange == null) {
-                throw new NotFoundException("Offer");
+                throw new NotFoundException(SCOPE);
             }
             toChange.setName(offer.getName());
             toChange.setCost(offer.getCost());
@@ -63,7 +64,7 @@ public class OfferService {
             toChange.setCreatedBy(offer.getCreatedBy());
             return new ResponseEntity<>(new OfferResponse(toChange), HttpStatus.OK);
         } catch (Exception e) {
-            throw new FieldValidationException("Offer");
+            throw new FieldValidationException(SCOPE);
         }
     }
 
@@ -87,7 +88,7 @@ public class OfferService {
     public ResponseEntity<OfferResponse> getOfferById(Long offerId) {
         Offer found = offerRepository.get(offerId);
         if (found == null) {
-            throw new NotFoundException("Offer");
+            throw new NotFoundException(SCOPE);
         }
         return new ResponseEntity<>(new OfferResponse(found), HttpStatus.OK);
     }
@@ -106,7 +107,7 @@ public class OfferService {
         try {
             Offer toChange = offerRepository.get(offerId);
             if (toChange == null) {
-                throw new NotFoundException("Offer");
+                throw new NotFoundException(SCOPE);
             }
             if (name != null) {
                 toChange.setName(name);
@@ -122,7 +123,7 @@ public class OfferService {
             }
             return new ResponseEntity<>(new OfferResponse(toChange), HttpStatus.OK);
         } catch (Exception e) {
-            throw new FieldValidationException("Offer");
+            throw new FieldValidationException(SCOPE);
         }
     }
 }

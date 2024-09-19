@@ -15,6 +15,8 @@ import java.util.List;
 @Service
 public class OrderService {
 
+    private static final String SCOPE = "Order";
+
     private final OrderRepository orderRepository;
 
     @Autowired
@@ -43,7 +45,7 @@ public class OrderService {
             orderRepository.store(order);
             return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
         } catch (Exception e) {
-            throw new FieldValidationException("Order");
+            throw new FieldValidationException(SCOPE);
         }
     }
 
@@ -59,10 +61,10 @@ public class OrderService {
             if (found != null) {
                 return new ResponseEntity<>(new OrderResponse(found), HttpStatus.OK);
             } else {
-                throw new NotFoundException("Order");
+                throw new NotFoundException(SCOPE);
             }
         } catch (Exception e) {
-            throw new FieldValidationException("Order");
+            throw new FieldValidationException(SCOPE);
         }
     }
 
@@ -78,13 +80,13 @@ public class OrderService {
         try {
             Order order = orderRepository.get(orderId);
             if (order == null) {
-                throw new NotFoundException("Order");
+                throw new NotFoundException(SCOPE);
             }
             order.setCompleted(completed);
             order.setPayed(payed);
             return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
         } catch (Exception e) {
-            throw new FieldValidationException("Order");
+            throw new FieldValidationException(SCOPE);
         }
     }
 

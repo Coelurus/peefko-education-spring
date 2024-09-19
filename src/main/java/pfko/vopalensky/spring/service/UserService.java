@@ -12,6 +12,8 @@ import pfko.vopalensky.spring.security.UserController;
 
 @Service
 public class UserService {
+    private static final String SCOPE = "User";
+
     private final UserRepository userRepository;
     private final UserController userController;
 
@@ -32,7 +34,7 @@ public class UserService {
             userRepository.store(user);
             return new ResponseEntity<>(new UserResponse(user), HttpStatus.OK);
         } catch (Exception e) {
-            throw new FieldValidationException("Order");
+            throw new FieldValidationException(SCOPE);
         }
     }
 
