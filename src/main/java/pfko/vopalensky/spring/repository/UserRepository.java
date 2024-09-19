@@ -2,7 +2,9 @@ package pfko.vopalensky.spring.repository;
 
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.Offer;
+import pfko.vopalensky.spring.model.StatusEnum;
 import pfko.vopalensky.spring.model.User;
+import pfko.vopalensky.spring.response.UserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +17,9 @@ public class UserRepository implements ObjectRepository<User> {
 
     public UserRepository() {
         users.add(new User(0L, "mardijebuh", "hash",
-                User.StatusEnum.CUSTOMER, "Mardi"));
+                StatusEnum.CUSTOMER, "Mardi"));
         users.add(new User(1L, "popuh", "heslo123",
-                User.StatusEnum.CUSTOMER, "TJ"));
+                StatusEnum.CUSTOMER, "TJ"));
     }
 
     @Override
@@ -42,5 +44,10 @@ public class UserRepository implements ObjectRepository<User> {
     @Override
     public List<User> findAll() {
         return users;
+    }
+
+    @Override
+    public List<UserResponse> getResponses() {
+        return users.stream().map(UserResponse::new).toList();
     }
 }

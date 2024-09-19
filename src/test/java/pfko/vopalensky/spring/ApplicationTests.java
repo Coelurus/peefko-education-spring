@@ -118,13 +118,14 @@ class ApplicationTests {
 
     @Test
     void testPlaceOrder() throws Exception {
-        String orderString = "{ \"id\":1, \"offerId\":3, \"customerId\":7, \"completed\":true, \"payed\":false}";
+        String orderString = "{ \"id\":222, \"offerId\":440, \"customerId\":74, \"completed\":true, \"payed\":false}";
         ResultActions result = mockMvc.perform(post("/order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"offerId\":3,\"customerId\":7,\"completed\":true,\"payed\":false}"));
+                .andExpect(content().string("{\"id\":222,\"offerId\":440,\"customerId\":74,\"completed\":true," +
+                        "\"payed\":false}"));
     }
 
     @Test

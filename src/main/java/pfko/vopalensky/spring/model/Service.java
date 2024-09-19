@@ -1,4 +1,11 @@
 package pfko.vopalensky.spring.model;
 
-public record Service(long id, String name, String description) {
+import lombok.Data;
+
+
+@Data
+public class Service {
+    private final long id;
+    private String name;
+    private String description;
 }

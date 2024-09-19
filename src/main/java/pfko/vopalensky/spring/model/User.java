@@ -1,38 +1,24 @@
 package pfko.vopalensky.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+@Data
 public class User {
+    @JsonProperty("id")
     private long id;
+
+    @JsonProperty("userName")
     private String userName;
+
+    @JsonProperty("hashPassword")
     private String hashPassword;
+
+    @JsonProperty("status")
     private StatusEnum status;
+
+    @JsonProperty("name")
     private String name;
-
-    public enum StatusEnum {
-        CUSTOMER("customer"),
-
-        SUPPLIER("supplier");
-
-        private String value;
-
-
-        StatusEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        public static StatusEnum fromValue(String text) {
-            for (StatusEnum state : StatusEnum.values()) {
-                if (String.valueOf(state.value).equals(text)) {
-                    return state;
-                }
-            }
-            return null;
-        }
-    }
 
     public User(long id, String userName, String hashPassword, StatusEnum status, String name) {
         this.id = id;
@@ -40,25 +26,5 @@ public class User {
         this.hashPassword = hashPassword;
         this.status = status;
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getHashPassword() {
-        return hashPassword;
-    }
-
-    public StatusEnum getStatus() {
-        return status;
-    }
-
-    public String getName() {
-        return name;
     }
 }

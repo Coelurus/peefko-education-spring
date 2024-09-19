@@ -2,6 +2,7 @@ package pfko.vopalensky.spring.repository;
 
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.Order;
+import pfko.vopalensky.spring.response.OrderResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +14,8 @@ public class OrderRepository implements ObjectRepository<Order> {
     private final List<Order> orders = new ArrayList<>();
 
     public OrderRepository() {
-        orders.add(new Order(0L, 1L, 0L));
-        orders.add(new Order(1L, 2L, 1L));
+        orders.add(new Order(0L, 1L, 0L, false, false));
+        orders.add(new Order(1L, 2L, 1L, false, false));
     }
 
     @Override
@@ -39,5 +40,10 @@ public class OrderRepository implements ObjectRepository<Order> {
     @Override
     public List<Order> findAll() {
         return orders;
+    }
+
+    @Override
+    public List<OrderResponse> getResponses() {
+        return orders.stream().map(OrderResponse::new).toList();
     }
 }
