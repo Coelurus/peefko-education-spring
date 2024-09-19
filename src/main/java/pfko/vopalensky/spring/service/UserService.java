@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.repository.UserRepository;
 import pfko.vopalensky.spring.response.UserResponse;
@@ -31,7 +32,7 @@ public class UserService {
             userRepository.store(user);
             return new ResponseEntity<>(new UserResponse(user), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new FieldValidationException("Order");
         }
     }
 

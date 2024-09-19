@@ -3,6 +3,8 @@ package pfko.vopalensky.spring.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pfko.vopalensky.spring.error.exception.FieldValidationException;
+import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.repository.OfferRepository;
@@ -39,7 +41,7 @@ public class OfferService {
             offerRepository.store(offer);
             return new ResponseEntity<>(new OfferResponse(offer), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new FieldValidationException("Offer");
         }
     }
 
@@ -53,7 +55,7 @@ public class OfferService {
         try {
             Offer toChange = offerRepository.get(offer.getId());
             if (toChange == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                throw new NotFoundException("Offer");
             }
             toChange.setName(offer.getName());
             toChange.setCost(offer.getCost());
@@ -61,7 +63,7 @@ public class OfferService {
             toChange.setCreatedBy(offer.getCreatedBy());
             return new ResponseEntity<>(new OfferResponse(toChange), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new FieldValidationException("Offer");
         }
     }
 
@@ -83,16 +85,11 @@ public class OfferService {
      * @return found offer
      */
     public ResponseEntity<OfferResponse> getOfferById(Long offerId) {
-        try {
-            Offer found = offerRepository.get(offerId);
-            if (found != null) {
-                return new ResponseEntity<>(new OfferResponse(found), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Offer found = offerRepository.get(offerId);
+        if (found == null) {
+            throw new NotFoundException("Offer");
         }
+        return new ResponseEntity<>(new OfferResponse(found), HttpStatus.OK);
     }
 
     /**
@@ -109,7 +106,7 @@ public class OfferService {
         try {
             Offer toChange = offerRepository.get(offerId);
             if (toChange == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                throw new NotFoundException("Offer");
             }
             if (name != null) {
                 toChange.setName(name);
@@ -125,7 +122,7 @@ public class OfferService {
             }
             return new ResponseEntity<>(new OfferResponse(toChange), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new FieldValidationException("Offer");
         }
     }
 }
