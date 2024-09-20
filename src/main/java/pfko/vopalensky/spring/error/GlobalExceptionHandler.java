@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({AuthenticationException.class})
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ignored) {
 
         ErrorResponse re = new ErrorResponse(
                 List.of(new ErrorDetail("AUTHENTICATION", "PAGE ACCESS"))

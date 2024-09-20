@@ -20,7 +20,7 @@ public class Offer {
     private List<Service> services;
 
     @JsonProperty("created")
-    private UserM createdBy;
+    private User createdBy;
 
     public Offer(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("cost") Long cost) {
         this.id = id;

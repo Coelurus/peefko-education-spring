@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.Service;
-import pfko.vopalensky.spring.model.UserM;
+import pfko.vopalensky.spring.model.User;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class OfferResponse {
     private List<Service> services;
 
     @JsonProperty("created")
-    private UserM createdBy;
+    private User createdBy;
 
     public OfferResponse(Offer offer) {
         id = offer.getId();

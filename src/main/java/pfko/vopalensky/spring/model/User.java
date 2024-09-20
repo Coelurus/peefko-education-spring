@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class UserM {
+public class User {
     @JsonProperty("id")
     private long id;
 
@@ -20,7 +20,7 @@ public class UserM {
     @JsonProperty("name")
     private String name;
 
-    public UserM(long id, String userName, String password, StatusEnum status, String name) {
+    public User(long id, String userName, String password, StatusEnum status, String name) {
         this.id = id;
         this.userName = userName;
         this.password = password;

@@ -16,13 +16,4 @@ public enum StatusEnum {
     public String toString() {
         return String.valueOf(value);
     }
-
-    public static StatusEnum fromValue(String text) {
-        for (StatusEnum state : StatusEnum.values()) {
-            if (String.valueOf(state.value).equals(text)) {
-                return state;
-            }
-        }
-        return null;
-    }
 }
