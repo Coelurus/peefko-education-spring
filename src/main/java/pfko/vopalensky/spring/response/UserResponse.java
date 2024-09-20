@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import pfko.vopalensky.spring.model.StatusEnum;
-import pfko.vopalensky.spring.model.User;
+import pfko.vopalensky.spring.model.UserM;
 
 @Getter
 @Data
@@ -24,10 +24,10 @@ public class UserResponse {
     @JsonProperty("name")
     private String name;
 
-    public UserResponse(User user) {
+    public UserResponse(UserM user) {
         this.id = user.getId();
         this.userName = user.getUserName();
-        this.hashPassword = user.getHashPassword();
+        this.hashPassword = user.getPassword();
         this.status = user.getStatus();
         this.name = user.getName();
     }

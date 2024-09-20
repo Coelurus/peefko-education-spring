@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Offer;
-import pfko.vopalensky.spring.model.User;
+import pfko.vopalensky.spring.model.UserM;
 import pfko.vopalensky.spring.repository.OfferRepository;
 import pfko.vopalensky.spring.response.OfferResponse;
 
@@ -103,7 +103,7 @@ public class OfferService {
      * @param created  ID of worker/team that created this offer
      */
     public ResponseEntity<OfferResponse> updateOfferWithForm(
-            Long offerId, String name, Long cost, List<pfko.vopalensky.spring.model.Service> services, User created) {
+            Long offerId, String name, Long cost, List<pfko.vopalensky.spring.model.Service> services, UserM created) {
         try {
             Offer toChange = offerRepository.get(offerId);
             if (toChange == null) {

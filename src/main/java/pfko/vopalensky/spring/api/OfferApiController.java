@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.Service;
-import pfko.vopalensky.spring.model.User;
+import pfko.vopalensky.spring.model.UserM;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.service.OfferService;
 
@@ -91,7 +91,7 @@ public class OfferApiController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cost", required = false) Long cost,
             @RequestParam(value = "services", required = false) List<Service> services,
-            @RequestParam(value = "created", required = false) User created) {
+            @RequestParam(value = "created", required = false) UserM created) {
         return offerService.updateOfferWithForm(offerId, name, cost, services, created);
     }
 }

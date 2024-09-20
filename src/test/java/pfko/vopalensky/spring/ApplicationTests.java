@@ -25,6 +25,7 @@ class ApplicationTests {
     private MockMvc mockMvc;
 
     @BeforeEach
+    @AutoConfigureMockMvc()
     void fillWithOffers() throws Exception {
         String[] offer1String = {"{ \"id\":0, \"name\":\"Test\", \"cost\":999}",
                 "{ \"id\":1, \"name\":\"Offer\", \"cost\":123}",
