@@ -9,4 +9,4 @@ GET ALL OFFERS
 Invoke-WebRequest -Uri http://localhost:8080/board/offers -Method GET -Headers @{"accept"="application/json"}
 
 ADD ORDER
-Invoke-WebRequest -Uri http://localhost:8080/board/order -Method POST -ContentType "application/json" -Body '{ "id": 10,"offerId": 43, "customerId": 5, "complete": false,"payed": false}' -Headers @{"accept"="application/json"}
+Invoke-WebRequest -Uri http://localhost:8080/board/order  -Method POST -ContentType "application/json" -Body '{ "id": 10,"offerId": 43, "customerId": 5, "complete": false,"payed": false}' -Headers @{"accept"="application/json"}

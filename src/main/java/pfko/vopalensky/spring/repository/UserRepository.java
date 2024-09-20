@@ -3,7 +3,6 @@ package pfko.vopalensky.spring.repository;
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.StatusEnum;
 import pfko.vopalensky.spring.model.User;
-import pfko.vopalensky.spring.response.UserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,10 @@ public class UserRepository implements ObjectRepository<User> {
     private final List<User> users = new ArrayList<>();
 
     public UserRepository() {
-        users.add(new User(0L, "mardijebuh", "hash",
-                StatusEnum.CUSTOMER, "Mardi"));
-        users.add(new User(1L, "popuh", "heslo123",
-                StatusEnum.CUSTOMER, "TJ"));
+        users.add(new User(0L, "user", "user",
+                StatusEnum.CUSTOMER, "IM PAYING"));
+        users.add(new User(1L, "admin", "admin",
+                StatusEnum.SUPPLIER, "MONEYZ"));
     }
 
     @Override
@@ -30,6 +29,12 @@ public class UserRepository implements ObjectRepository<User> {
     public User get(Long id) {
         return users.stream()
                 .filter(u -> Objects.equals(u.getId(), id))
+                .findFirst().orElse(null);
+    }
+
+    public User get(String username) {
+        return users.stream()
+                .filter(u -> Objects.equals(u.getUserName(), username))
                 .findFirst().orElse(null);
     }
 
@@ -45,7 +50,4 @@ public class UserRepository implements ObjectRepository<User> {
         return users;
     }
 
-    public List<UserResponse> getResponses() {
-        return users.stream().map(UserResponse::new).toList();
-    }
 }

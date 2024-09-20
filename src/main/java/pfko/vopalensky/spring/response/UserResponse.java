@@ -27,7 +27,7 @@ public class UserResponse {
     public UserResponse(User user) {
         this.id = user.getId();
         this.userName = user.getUserName();
-        this.hashPassword = user.getHashPassword();
+        this.hashPassword = user.getPassword();
         this.status = user.getStatus();
         this.name = user.getName();
     }

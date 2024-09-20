@@ -11,8 +11,8 @@ public class User {
     @JsonProperty("userName")
     private String userName;
 
-    @JsonProperty("hashPassword")
-    private String hashPassword;
+    @JsonProperty("password")
+    private String password;
 
     @JsonProperty("status")
     private StatusEnum status;
@@ -20,10 +20,10 @@ public class User {
     @JsonProperty("name")
     private String name;
 
-    public User(long id, String userName, String hashPassword, StatusEnum status, String name) {
+    public User(long id, String userName, String password, StatusEnum status, String name) {
         this.id = id;
         this.userName = userName;
-        this.hashPassword = hashPassword;
+        this.password = password;
         this.status = status;
         this.name = name;
     }
