@@ -4,8 +4,8 @@ import lombok.Data;
 
 
 @Data
-public class Service {
+public class MyService {
     private final long id;
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
 }

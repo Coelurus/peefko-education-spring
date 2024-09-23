@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import pfko.vopalensky.spring.model.StatusEnum;
+import pfko.vopalensky.spring.model.Status;
 import pfko.vopalensky.spring.repository.UserRepository;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/offer").permitAll()
-                        .requestMatchers("/order").hasRole(StatusEnum.SUPPLIER.toString())
+                        .requestMatchers("/order").hasRole(Status.SUPPLIER.toString())
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

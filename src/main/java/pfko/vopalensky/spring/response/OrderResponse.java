@@ -1,21 +1,18 @@
 package pfko.vopalensky.spring.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pfko.vopalensky.spring.model.Order;
 
 @Getter
-@AllArgsConstructor
 public class OrderResponse {
     @JsonProperty("id")
-    private final long id;
+    private final Long id;
 
-    @JsonProperty("offerId")
-    private long offerId;
+    @JsonProperty("offer")
+    private OfferResponse offer;
 
-    @JsonProperty("customerId")
-    private long customerId;
+    @JsonProperty("customer")
+    private UserResponse customer;
 
     @JsonProperty("completed")
     private boolean completed;
@@ -23,11 +20,12 @@ public class OrderResponse {
     @JsonProperty("payed")
     private boolean payed;
 
-    public OrderResponse(Order order) {
-        this.id = order.getId();
-        this.offerId = order.getOfferId();
-        this.customerId = order.getCustomerId();
-        this.completed = order.isCompleted();
-        this.payed = order.isPayed();
+    public OrderResponse(Long id, OfferResponse offer, UserResponse customer,
+                         boolean completed, boolean payed) {
+        this.id = id;
+        this.offer = offer;
+        this.customer = customer;
+        this.completed = completed;
+        this.payed = payed;
     }
 }

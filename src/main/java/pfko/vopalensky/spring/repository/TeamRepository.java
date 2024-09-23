@@ -1,5 +1,6 @@
 package pfko.vopalensky.spring.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.SupplierTeam;
 
@@ -11,8 +12,12 @@ import java.util.Objects;
 @Repository
 public class TeamRepository implements ObjectRepository<SupplierTeam> {
 
-    public TeamRepository() {
-        store(new SupplierTeam(0L, 0L, Arrays.asList(0L, 1L)));
+    @Autowired
+    public TeamRepository(CreatorRepository creatorRepository) {
+        SupplierTeam team = new SupplierTeam(0L, 0L,
+                Arrays.asList(0L, 1L), 0L);
+        store(team);
+        creatorRepository.store(team);
     }
 
     private final List<SupplierTeam> teams = new ArrayList<>();

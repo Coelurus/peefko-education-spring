@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pfko.vopalensky.spring.model.Offer;
-import pfko.vopalensky.spring.model.Service;
-import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.service.OfferService;
 
