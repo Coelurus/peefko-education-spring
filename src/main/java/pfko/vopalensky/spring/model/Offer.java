@@ -17,14 +17,20 @@ public class Offer {
     private Long cost;
 
     @JsonProperty("services")
-    private List<Service> services;
+    private List<Long> servicesIds;
 
-    @JsonProperty("created")
-    private User createdBy;
+    @JsonProperty("creator")
+    private Long creatorId;
 
-    public Offer(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("cost") Long cost) {
+    public Offer(@JsonProperty("id") Long id,
+                 @JsonProperty("name") String name,
+                 @JsonProperty("cost") Long cost,
+                 @JsonProperty("services") List<Long> servicesIds,
+                 @JsonProperty("creator") Long creatorId) {
         this.id = id;
         this.name = name;
         this.cost = cost;
+        this.servicesIds = servicesIds;
+        this.creatorId = creatorId;
     }
 }
