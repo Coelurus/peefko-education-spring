@@ -1,6 +1,5 @@
 package pfko.vopalensky.spring;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,13 @@ class ApplicationTests {
     @Test
     @WithMockUser(username = "admin", password = "admin", roles = {"supplier"})
     void testAddOffer() throws Exception {
-        String offerString = "{ \"id\":1, \"name\":\"Test\", \"cost\":3000}";
+        String offerString = "{ \"id\":1, \"name\":\"Test\", \"cost\":3000, \"services\":[1], \"creator\":0}";
         ResultActions result = mockMvc.perform(post("/offer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(offerString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"Test\",\"cost\":3000,\"services\":null,\"created\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"Test\",\"cost\":3000,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}}"));
     }
 
 
@@ -54,7 +53,7 @@ class ApplicationTests {
         ResultActions result = mockMvc.perform(get("/offer/0")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":null,\"created\":{\"id\":0,\"userName\":\"user\",\"password\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"}}"));
+                .andExpect(content().string("{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":[{\"id\":2,\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}}"));
     }
 
     @Test
@@ -68,9 +67,14 @@ class ApplicationTests {
     @Test
     @WithMockUser(username = "admin", roles = {"supplier"})
     void deleteOffer() throws Exception {
-        ResultActions results = mockMvc.perform(delete("/offer/1"));
+        String offerString = "{ \"id\":13, \"name\":\"Test\", \"cost\":3000, \"services\":[1], \"creator\":0}";
+        mockMvc.perform(post("/offer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(offerString)
+                .header("Accept", "application/json"));
+        ResultActions results = mockMvc.perform(delete("/offer/13"));
         results.andExpect(status().isOk());
-        mockMvc.perform(get("/offer/1")
+        mockMvc.perform(get("/offer/13")
                         .header("Accept", "application/json"))
                 .andExpect(status().isNotFound());
     }
@@ -83,19 +87,19 @@ class ApplicationTests {
                 .param("cost", "1001")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":null,\"created\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}}"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {"supplier"})
     void testUpdateOffer() throws Exception {
-        String offerString = "{ \"id\":1, \"name\":\"PutChange\", \"cost\":696}";
+        String offerString = "{ \"id\":1, \"name\":\"PutChange\", \"cost\":696, \"services\":[1], \"creator\":0}";
         ResultActions result = mockMvc.perform(put("/offer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(offerString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":null,\"created\":null}"));
+                .andExpect(content().string("{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}}"));
     }
 
     @Test
@@ -104,20 +108,19 @@ class ApplicationTests {
         ResultActions result = mockMvc.perform(get("/offer")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":null,\"created\":{\"id\":0,\"userName\":\"user\",\"password\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"}},{\"id\":2,\"name\":\"Home Page Button\",\"cost\":100000,\"services\":null,\"created\":{\"id\":1,\"userName\":\"admin\",\"password\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}},{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":null,\"created\":null}]"));
+                .andExpect(content().string("[{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":[{\"id\":2,\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},{\"id\":2,\"name\":\"Home Page Button\",\"cost\":100000,\"services\":[{\"id\":0,\"name\":\"NAP\",\"description\":\"Like sleeping\"}],\"created\":{\"id\":2,\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}},{\"id\":1,\"name\":\"Test\",\"cost\":3000,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}}]"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {"supplier"})
     void testPlaceOrder() throws Exception {
-        String orderString = "{ \"id\":222, \"offerId\":440, \"customerId\":74, \"completed\":true, \"payed\":false}";
+        String orderString = "{ \"id\":222, \"offerId\":0, \"customerId\":0, \"completed\":true, \"payed\":false}";
         ResultActions result = mockMvc.perform(post("/order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":222,\"offerId\":440,\"customerId\":74,\"completed\":true," +
-                        "\"payed\":false}"));
+                .andExpect(content().string("{\"id\":222,\"offer\":{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":[{\"id\":2,\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
     }
 
     @Test
@@ -126,7 +129,7 @@ class ApplicationTests {
         mockMvc.perform(get("/order/0")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":0,\"offerId\":1,\"customerId\":0,\"completed\":true,\"payed\":true}"));
+                .andExpect(content().string("{\"id\":0,\"offer\":{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":true}"));
     }
 
     @Test
@@ -142,15 +145,20 @@ class ApplicationTests {
                         .param("payed", "true")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":0,\"offerId\":1,\"customerId\":0,\"completed\":true,\"payed\":true}"));
+                .andExpect(content().string("{\"id\":0,\"offer\":{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":true}"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {"supplier"})
     void testDeleteOrder() throws Exception {
-        mockMvc.perform(delete("/order/1"))
+        String orderString = "{ \"id\":222, \"offerId\":0, \"customerId\":0, \"completed\":true, \"payed\":false}";
+        mockMvc.perform(post("/order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderString)
+                .header("Accept", "application/json"));
+        mockMvc.perform(delete("/order/222"))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/board/order/1")
+        mockMvc.perform(get("/board/order/222")
                         .header("Accept", "application/json"))
                 .andExpect(status().isNotFound());
     }
