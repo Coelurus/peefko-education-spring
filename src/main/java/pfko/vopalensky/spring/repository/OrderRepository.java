@@ -2,7 +2,6 @@ package pfko.vopalensky.spring.repository;
 
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.Order;
-import pfko.vopalensky.spring.response.OrderResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,4 @@ public class OrderRepository implements ObjectRepository<Order> {
         return orders;
     }
 
-    public List<OrderResponse> getResponses() {
-        return orders.stream().map(OrderResponse::new).toList();
-    }
 }

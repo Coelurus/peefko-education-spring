@@ -2,9 +2,6 @@ package pfko.vopalensky.spring.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import pfko.vopalensky.spring.model.Creator;
-import pfko.vopalensky.spring.model.Offer;
-import pfko.vopalensky.spring.repository.UserRepository;
 
 import java.util.List;
 
@@ -20,17 +17,18 @@ public class OfferResponse {
     private Long cost;
 
     @JsonProperty("services")
-    private List<Long> services;
+    private List<ServiceResponse> services;
 
     @JsonProperty("created")
-    private Creator createdBy;
+    private CreatorResponse createdBy;
 
-    public OfferResponse(Offer offer,
-                         UserRepository userRepository) {
-        id = offer.getId();
-        name = offer.getName();
-        cost = offer.getCost();
-        services = offer.getServicesIds();
-        createdBy = userRepository.get(offer.getCreatorId());
+    public OfferResponse(Long id, String name, Long cost,
+                         List<ServiceResponse> services,
+                         CreatorResponse createdBy) {
+        this.id = id;
+        this.name = name;
+        this.cost = cost;
+        this.services = services;
+        this.createdBy = createdBy;
     }
 }

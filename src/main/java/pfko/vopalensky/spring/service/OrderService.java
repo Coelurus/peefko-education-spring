@@ -8,7 +8,9 @@ import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Order;
 import pfko.vopalensky.spring.repository.OrderRepository;
+import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.response.OrderResponse;
+import pfko.vopalensky.spring.response.UserResponse;
 
 import java.util.List;
 
@@ -18,10 +20,16 @@ public class OrderService {
     private static final String SCOPE = "Order";
 
     private final OrderRepository orderRepository;
+    private final UserService userService;
+    private final OfferService offerService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository,
+                        UserService userService,
+                        OfferService offerService) {
         this.orderRepository = orderRepository;
+        this.userService = userService;
+        this.offerService = offerService;
     }
 
     /**
@@ -30,7 +38,7 @@ public class OrderService {
      * @return All orders in db
      */
     public ResponseEntity<List<OrderResponse>> getOrders() {
-        List<OrderResponse> orders = orderRepository.getResponses();
+        List<OrderResponse> orders = getAllResponses();
         return ResponseEntity.ok(orders);
     }
 
@@ -43,7 +51,7 @@ public class OrderService {
     public ResponseEntity<OrderResponse> placeOrder(Order order) {
         try {
             orderRepository.store(order);
-            return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
+            return ResponseEntity.ok(getOrderResponse(order));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -59,7 +67,7 @@ public class OrderService {
         try {
             Order found = orderRepository.get(orderId);
             if (found != null) {
-                return new ResponseEntity<>(new OrderResponse(found), HttpStatus.OK);
+                return ResponseEntity.ok(getOrderResponse(found));
             } else {
                 throw new NotFoundException(SCOPE);
             }
@@ -84,7 +92,7 @@ public class OrderService {
             }
             order.setCompleted(completed);
             order.setPayed(payed);
-            return new ResponseEntity<>(new OrderResponse(order), HttpStatus.OK);
+            return ResponseEntity.ok(getOrderResponse(order));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -99,6 +107,27 @@ public class OrderService {
     public ResponseEntity<Void> deleteOrder(Long orderId) {
         orderRepository.delete(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public OrderResponse getOrderResponse(Order order) {
+        OfferResponse offerResponse =
+                offerService.getOfferResponse(order.getOfferId());
+
+        UserResponse userResponse =
+                userService.getUserResponse(order.getCustomerId());
+
+        return new OrderResponse(order.getId(), offerResponse, userResponse,
+                order.isCompleted(), order.isPayed());
+    }
+
+    public OrderResponse getOrderResponse(Long orderId) {
+        return getOrderResponse(orderRepository.get(orderId));
+    }
+
+    public List<OrderResponse> getAllResponses() {
+        return orderRepository.findAll().stream()
+                .map(this::getOrderResponse)
+                .toList();
     }
 }
 

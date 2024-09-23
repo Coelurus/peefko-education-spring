@@ -1,7 +1,9 @@
 package pfko.vopalensky.spring.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import pfko.vopalensky.spring.model.StatusEnum;
+import pfko.vopalensky.spring.model.CreatorType;
+import pfko.vopalensky.spring.model.Status;
 import pfko.vopalensky.spring.model.User;
 
 import java.util.ArrayList;
@@ -13,11 +15,20 @@ public class UserRepository implements ObjectRepository<User> {
 
     private final List<User> users = new ArrayList<>();
 
-    public UserRepository() {
-        users.add(new User(0L, "user", "user",
-                StatusEnum.CUSTOMER, "IM PAYING"));
-        users.add(new User(1L, "admin", "admin",
-                StatusEnum.SUPPLIER, "MONEYZ"));
+    @Autowired
+    public UserRepository(CreatorRepository creatorRepository) {
+        store(new User(0L, "user", "user",
+                Status.CUSTOMER, "IM PAYING"));
+
+        User admin = new User(1L, "admin", "admin",
+                Status.SUPPLIER, "MONEYZ", 1L);
+        store(admin);
+        creatorRepository.store(admin);
+
+        User creator = new User(2L, "creator", "creator",
+                Status.SUPPLIER, "I CREATE STUFF", 2L);
+        store(creator);
+        creatorRepository.store(creator);
     }
 
     @Override

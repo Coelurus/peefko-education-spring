@@ -1,26 +1,22 @@
 package pfko.vopalensky.spring.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pfko.vopalensky.spring.model.SupplierTeam;
-import pfko.vopalensky.spring.model.User;
-import pfko.vopalensky.spring.repository.UserRepository;
 
 import java.util.List;
 
-public class TeamResponse {
+public class TeamResponse implements CreatorResponse {
     @JsonProperty("id")
     private final long id;
     @JsonProperty("leader")
-    private final User leader;
+    private final UserResponse leader;
     @JsonProperty("members")
-    private final List<User> members;
+    private final List<UserResponse> members;
 
 
-    public TeamResponse(SupplierTeam supplierTeam,
-                        UserRepository userRepository) {
-        this.id = supplierTeam.getId();
-        this.leader = userRepository.get(supplierTeam.getLeaderId());
-        this.members = supplierTeam.getMembers()
-                .stream().map(userRepository::get).toList();
+    public TeamResponse(long id, UserResponse leader,
+                        List<UserResponse> members) {
+        this.id = id;
+        this.leader = leader;
+        this.members = members;
     }
 }

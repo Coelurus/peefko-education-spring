@@ -1,15 +1,22 @@
 package pfko.vopalensky.spring.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
+import pfko.vopalensky.spring.model.Creator;
+import pfko.vopalensky.spring.model.CreatorType;
 import pfko.vopalensky.spring.model.Offer;
+import pfko.vopalensky.spring.model.SupplierTeam;
 import pfko.vopalensky.spring.model.User;
+import pfko.vopalensky.spring.repository.CreatorRepository;
 import pfko.vopalensky.spring.repository.OfferRepository;
-import pfko.vopalensky.spring.repository.UserRepository;
+import pfko.vopalensky.spring.repository.ServiceRepository;
+import pfko.vopalensky.spring.response.CreatorResponse;
 import pfko.vopalensky.spring.response.OfferResponse;
+import pfko.vopalensky.spring.response.ServiceResponse;
 
 import java.util.List;
 
@@ -18,12 +25,25 @@ public class OfferService {
     private static final String SCOPE = "Offer";
 
     private final OfferRepository offerRepository;
-    private final UserRepository userRepository;
+    private final CreatorRepository creatorRepository;
+    private final ServiceRepository serviceRepository;
+    private final TeamService teamService;
+    private final UserService userService;
+    private final MyServiceService myServiceService;
 
+    @Autowired
     public OfferService(OfferRepository offerRepository,
-                        UserRepository userRepository) {
+                        CreatorRepository creatorRepository,
+                        ServiceRepository serviceRepository,
+                        TeamService teamService,
+                        UserService userService,
+                        MyServiceService myServiceService) {
         this.offerRepository = offerRepository;
-        this.userRepository = userRepository;
+        this.creatorRepository = creatorRepository;
+        this.serviceRepository = serviceRepository;
+        this.teamService = teamService;
+        this.userService = userService;
+        this.myServiceService = myServiceService;
     }
 
     /**
@@ -32,7 +52,7 @@ public class OfferService {
      * @return all stored offers
      */
     public ResponseEntity<List<OfferResponse>> getOffers() {
-        return new ResponseEntity<>(offerRepository.getResponses(), HttpStatus.OK);
+        return ResponseEntity.ok(getAllResponses());
     }
 
     /**
@@ -44,7 +64,7 @@ public class OfferService {
     public ResponseEntity<OfferResponse> addOffer(Offer offer) {
         try {
             offerRepository.store(offer);
-            return new ResponseEntity<>(new OfferResponse(offer, userRepository), HttpStatus.OK);
+            return ResponseEntity.ok(getOfferResponse(offer));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -66,7 +86,7 @@ public class OfferService {
             toChange.setCost(offer.getCost());
             toChange.setServicesIds(offer.getServicesIds());
             toChange.setCreatorId(offer.getCreatorId());
-            return new ResponseEntity<>(new OfferResponse(toChange, userRepository), HttpStatus.OK);
+            return ResponseEntity.ok(getOfferResponse(toChange));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -94,7 +114,7 @@ public class OfferService {
         if (found == null) {
             throw new NotFoundException(SCOPE);
         }
-        return new ResponseEntity<>(new OfferResponse(found, userRepository), HttpStatus.OK);
+        return ResponseEntity.ok(getOfferResponse(found));
     }
 
     /**
@@ -125,9 +145,56 @@ public class OfferService {
             if (created != null) {
                 toChange.setCreatorId(created);
             }
-            return new ResponseEntity<>(new OfferResponse(toChange, userRepository), HttpStatus.OK);
+            return ResponseEntity.ok(getOfferResponse(toChange));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
+    }
+
+    /**
+     * Create offer response from database offer object
+     *
+     * @param offer DB offer entity
+     * @return Offer response entity
+     */
+    public OfferResponse getOfferResponse(Offer offer) {
+        List<ServiceResponse> services =
+                offer.getServicesIds()
+                        .stream().map(serviceRepository::get)
+                        .map(myServiceService::getServiceResponse)
+                        .toList();
+
+        Creator creator = creatorRepository.get(offer.getCreatorId());
+        CreatorResponse creatorResponse;
+        if (creator.getCreatorType() == CreatorType.INDIVIDUAL) {
+            creatorResponse = userService.getUserResponse((User) creator);
+        } else {
+            creatorResponse = teamService.getTeamResponse((SupplierTeam) creator);
+        }
+
+        return new OfferResponse(
+                offer.getId(), offer.getName(), offer.getCost(),
+                services, creatorResponse);
+    }
+
+    /**
+     * Create offer response from database offer object
+     *
+     * @param offerId ID of database offer object
+     * @return Offer response entity
+     */
+    public OfferResponse getOfferResponse(Long offerId) {
+        return getOfferResponse(offerRepository.get(offerId));
+    }
+
+    /**
+     * Get all offers from database and return them as response offer objects
+     *
+     * @return List of offer response objects
+     */
+    public List<OfferResponse> getAllResponses() {
+        return offerRepository.findAll().stream()
+                .map(this::getOfferResponse)
+                .toList();
     }
 }
