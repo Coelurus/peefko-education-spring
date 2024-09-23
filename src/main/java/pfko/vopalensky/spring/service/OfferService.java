@@ -8,6 +8,7 @@ import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.repository.OfferRepository;
+import pfko.vopalensky.spring.repository.UserRepository;
 import pfko.vopalensky.spring.response.OfferResponse;
 
 import java.util.List;
@@ -17,9 +18,12 @@ public class OfferService {
     private static final String SCOPE = "Offer";
 
     private final OfferRepository offerRepository;
+    private final UserRepository userRepository;
 
-    public OfferService(OfferRepository offerRepository) {
+    public OfferService(OfferRepository offerRepository,
+                        UserRepository userRepository) {
         this.offerRepository = offerRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -40,7 +44,7 @@ public class OfferService {
     public ResponseEntity<OfferResponse> addOffer(Offer offer) {
         try {
             offerRepository.store(offer);
-            return new ResponseEntity<>(new OfferResponse(offer), HttpStatus.OK);
+            return new ResponseEntity<>(new OfferResponse(offer, userRepository), HttpStatus.OK);
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -60,9 +64,9 @@ public class OfferService {
             }
             toChange.setName(offer.getName());
             toChange.setCost(offer.getCost());
-            toChange.setServices(offer.getServices());
-            toChange.setCreatedBy(offer.getCreatedBy());
-            return new ResponseEntity<>(new OfferResponse(toChange), HttpStatus.OK);
+            toChange.setServicesIds(offer.getServicesIds());
+            toChange.setCreatorId(offer.getCreatorId());
+            return new ResponseEntity<>(new OfferResponse(toChange, userRepository), HttpStatus.OK);
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -90,7 +94,7 @@ public class OfferService {
         if (found == null) {
             throw new NotFoundException(SCOPE);
         }
-        return new ResponseEntity<>(new OfferResponse(found), HttpStatus.OK);
+        return new ResponseEntity<>(new OfferResponse(found, userRepository), HttpStatus.OK);
     }
 
     /**
@@ -103,7 +107,7 @@ public class OfferService {
      * @param created  ID of worker/team that created this offer
      */
     public ResponseEntity<OfferResponse> updateOfferWithForm(
-            Long offerId, String name, Long cost, List<pfko.vopalensky.spring.model.Service> services, User created) {
+            Long offerId, String name, Long cost, List<Long> services, Long created) {
         try {
             Offer toChange = offerRepository.get(offerId);
             if (toChange == null) {
@@ -116,12 +120,12 @@ public class OfferService {
                 toChange.setCost(cost);
             }
             if (services != null) {
-                toChange.setServices(services);
+                toChange.setServicesIds(services);
             }
             if (created != null) {
-                toChange.setCreatedBy(created);
+                toChange.setCreatorId(created);
             }
-            return new ResponseEntity<>(new OfferResponse(toChange), HttpStatus.OK);
+            return new ResponseEntity<>(new OfferResponse(toChange, userRepository), HttpStatus.OK);
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }

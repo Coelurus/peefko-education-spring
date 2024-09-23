@@ -11,11 +11,13 @@ import java.util.Objects;
 @Repository
 public class OfferRepository implements ObjectRepository<Offer> {
     private final List<Offer> offers = new ArrayList<>();
+    private final UserRepository userRepository;
 
-    public OfferRepository() {
-        offers.add(new Offer(0L, "Security", 2000L));
-        offers.add(new Offer(1L, "All exclusive", 666L));
-        offers.add(new Offer(2L, "Home Page Button", 100000L));
+    public OfferRepository(UserRepository userRepository) {
+        offers.add(new Offer(0L, "Security", 2000L, null, 0L));
+        offers.add(new Offer(1L, "All exclusive", 666L, null, 1L));
+        offers.add(new Offer(2L, "Home Page Button", 100000L, null, 1L));
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -43,6 +45,6 @@ public class OfferRepository implements ObjectRepository<Offer> {
     }
 
     public List<OfferResponse> getResponses() {
-        return offers.stream().map(OfferResponse::new).toList();
+        return offers.stream().map(o -> new OfferResponse(o, userRepository)).toList();
     }
 }

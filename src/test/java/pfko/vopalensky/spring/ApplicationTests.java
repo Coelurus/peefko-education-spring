@@ -54,7 +54,7 @@ class ApplicationTests {
         ResultActions result = mockMvc.perform(get("/offer/0")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":null,\"created\":null}"));
+                .andExpect(content().string("{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":null,\"created\":{\"id\":0,\"userName\":\"user\",\"password\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"}}"));
     }
 
     @Test
@@ -104,7 +104,7 @@ class ApplicationTests {
         ResultActions result = mockMvc.perform(get("/offer")
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":null,\"created\":null},{\"id\":2,\"name\":\"Home Page Button\",\"cost\":100000,\"services\":null,\"created\":null},{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":null,\"created\":null}]"));
+                .andExpect(content().string("[{\"id\":0,\"name\":\"Security\",\"cost\":2000,\"services\":null,\"created\":{\"id\":0,\"userName\":\"user\",\"password\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"}},{\"id\":2,\"name\":\"Home Page Button\",\"cost\":100000,\"services\":null,\"created\":{\"id\":1,\"userName\":\"admin\",\"password\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}},{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":null,\"created\":null}]"));
     }
 
     @Test

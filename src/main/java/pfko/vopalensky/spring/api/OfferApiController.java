@@ -90,8 +90,8 @@ public class OfferApiController {
             @PathVariable(name = "offerId") Long offerId,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cost", required = false) Long cost,
-            @RequestParam(value = "services", required = false) List<Service> services,
-            @RequestParam(value = "created", required = false) User created) {
+            @RequestParam(value = "services", required = false) List<Long> services,
+            @RequestParam(value = "created", required = false) Long created) {
         return offerService.updateOfferWithForm(offerId, name, cost, services, created);
     }
 }
