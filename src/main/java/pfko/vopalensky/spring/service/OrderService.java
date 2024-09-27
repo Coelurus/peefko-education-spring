@@ -94,7 +94,7 @@ public class OrderService {
                 throw new NotFoundException(SCOPE);
             }
 
-            if (userService.isCurrentlyLoggedIn(order.getCustomerId())) {
+            if (userService.isCurrentlyLoggedIn(order.getCustomer().getId())) {
                 order.setCompleted(completed);
             } else {
                 throw new AuthenticationException("NOT_HIS_ORDER");
@@ -123,10 +123,10 @@ public class OrderService {
 
     public OrderResponse getOrderResponse(Order order) {
         OfferResponse offerResponse =
-                offerService.getOfferResponse(order.getOfferId());
+                offerService.getOfferResponse(order.getOffer());
 
         UserResponse userResponse =
-                userService.getUserResponse(order.getCustomerId());
+                userService.getUserResponse(order.getCustomer());
 
         return new OrderResponse(order.getId(), offerResponse, userResponse,
                 order.isCompleted(), order.isPayed());

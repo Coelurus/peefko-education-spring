@@ -6,15 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
-import pfko.vopalensky.spring.model.Creator;
-import pfko.vopalensky.spring.model.CreatorType;
 import pfko.vopalensky.spring.model.Offer;
-import pfko.vopalensky.spring.model.SupplierTeam;
-import pfko.vopalensky.spring.model.User;
-import pfko.vopalensky.spring.repository.CreatorRepository;
 import pfko.vopalensky.spring.repository.OfferRepository;
 import pfko.vopalensky.spring.repository.ServiceRepository;
-import pfko.vopalensky.spring.response.CreatorResponse;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.response.ServiceResponse;
 
@@ -25,7 +19,6 @@ public class OfferService {
     private static final String SCOPE = "Offer";
 
     private final OfferRepository offerRepository;
-    private final CreatorRepository creatorRepository;
     private final ServiceRepository serviceRepository;
     private final TeamService teamService;
     private final UserService userService;
@@ -33,13 +26,11 @@ public class OfferService {
 
     @Autowired
     public OfferService(OfferRepository offerRepository,
-                        CreatorRepository creatorRepository,
                         ServiceRepository serviceRepository,
                         TeamService teamService,
                         UserService userService,
                         MyServiceService myServiceService) {
         this.offerRepository = offerRepository;
-        this.creatorRepository = creatorRepository;
         this.serviceRepository = serviceRepository;
         this.teamService = teamService;
         this.userService = userService;
@@ -84,7 +75,7 @@ public class OfferService {
             }
             toChange.setName(offer.getName());
             toChange.setCost(offer.getCost());
-            toChange.setServicesIds(offer.getServicesIds());
+            //toChange.setServicesIds(offer.getServicesIds());
             toChange.setCreatorId(offer.getCreatorId());
             return ResponseEntity.ok(getOfferResponse(toChange));
         } catch (Exception e) {
@@ -140,7 +131,7 @@ public class OfferService {
                 toChange.setCost(cost);
             }
             if (services != null) {
-                toChange.setServicesIds(services);
+                //toChange.setServicesIds(services);
             }
             if (created != null) {
                 toChange.setCreatorId(created);
@@ -159,12 +150,11 @@ public class OfferService {
      */
     public OfferResponse getOfferResponse(Offer offer) {
         List<ServiceResponse> services =
-                offer.getServicesIds()
-                        .stream().map(serviceRepository::get)
+                offer.getServices().stream()
                         .map(myServiceService::getServiceResponse)
                         .toList();
 
-        Creator creator = creatorRepository.get(offer.getCreatorId());
+        /*
         CreatorResponse creatorResponse;
         if (creator.getCreatorType() == CreatorType.INDIVIDUAL) {
             creatorResponse = userService.getUserResponse((User) creator);
@@ -172,9 +162,11 @@ public class OfferService {
             creatorResponse = teamService.getTeamResponse((SupplierTeam) creator);
         }
 
+         */
+
         return new OfferResponse(
                 offer.getId(), offer.getName(), offer.getCost(),
-                services, creatorResponse);
+                services, null);
     }
 
     /**

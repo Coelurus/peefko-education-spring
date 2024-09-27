@@ -1,0 +1,17 @@
+CREATE SEQUENCE IF NOT EXISTS orders_seq START WITH 1 INCREMENT BY 50;
+
+CREATE TABLE orders
+(
+    id          BIGSERIAL NOT NULL,
+    offer_id    BIGINT    NOT NULL,
+    customer_id BIGINT    NOT NULL,
+    completed   BOOLEAN   NOT NULL,
+    payed       BOOLEAN   NOT NULL,
+    CONSTRAINT pk_orders PRIMARY KEY (id)
+);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_ORDERS_ON_CUSTOMER FOREIGN KEY (customer_id) REFERENCES users (id);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_ORDERS_ON_OFFER FOREIGN KEY (offer_id) REFERENCES offers (id);

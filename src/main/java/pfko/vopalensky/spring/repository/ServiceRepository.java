@@ -9,12 +9,7 @@ import java.util.Objects;
 
 @Repository
 public class ServiceRepository implements ObjectRepository<MyService> {
-    public ServiceRepository() {
-        store(new MyService(0L, "NAP", "Like sleeping"));
-        store(new MyService(1L, "COFFEE SERVICE", "I drink all your milk"));
-        store(new MyService(2L, "DESK INSPECTION", "Dont even ask"));
-    }
-
+    
     private final List<MyService> services = new ArrayList<>();
 
     @Override

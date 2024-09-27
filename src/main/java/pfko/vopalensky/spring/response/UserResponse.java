@@ -17,7 +17,7 @@ public class UserResponse implements CreatorResponse {
     private String userName;
 
     @JsonProperty("status")
-    private Status status;
+    private String status;
 
     @JsonProperty("name")
     private String name;

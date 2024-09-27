@@ -24,7 +24,7 @@ public class TeamService {
      * @return Response object
      */
     public TeamResponse getTeamResponse(SupplierTeam team) {
-        UserResponse leader = userService.getUserResponse(team.getLeaderId());
+        UserResponse leader = userService.getUserResponse(team.getLeader());
 
         List<UserResponse> members = team.getMembers().stream()
                 .map(userService::getUserResponse)

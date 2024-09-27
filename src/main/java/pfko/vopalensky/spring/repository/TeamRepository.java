@@ -12,14 +12,6 @@ import java.util.Objects;
 @Repository
 public class TeamRepository implements ObjectRepository<SupplierTeam> {
 
-    @Autowired
-    public TeamRepository(CreatorRepository creatorRepository) {
-        SupplierTeam team = new SupplierTeam(0L, 0L,
-                Arrays.asList(0L, 1L), 0L);
-        store(team);
-        creatorRepository.store(team);
-    }
-
     private final List<SupplierTeam> teams = new ArrayList<>();
 
     @Override

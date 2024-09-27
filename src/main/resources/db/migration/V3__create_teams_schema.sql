@@ -1,0 +1,17 @@
+CREATE SEQUENCE IF NOT EXISTS teams_seq START WITH 1 INCREMENT BY 50;
+
+CREATE TABLE teams
+(
+    id        BIGSERIAL NOT NULL,
+    leader_id BIGINT    NOT NULL,
+    CONSTRAINT pk_teams PRIMARY KEY (id)
+);
+
+ALTER TABLE teams
+    ADD CONSTRAINT uc_teams_leader UNIQUE (leader_id);
+
+ALTER TABLE teams
+    ADD CONSTRAINT FK_TEAMS_ON_LEADER FOREIGN KEY (leader_id) REFERENCES users (id);
+
+ALTER TABLE users
+    ADD CONSTRAINT FK_USERS_ON_TEAM FOREIGN KEY (team_id) REFERENCES teams (id);

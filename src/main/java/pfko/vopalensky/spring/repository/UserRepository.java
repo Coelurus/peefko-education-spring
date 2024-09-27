@@ -14,22 +14,6 @@ public class UserRepository implements ObjectRepository<User> {
 
     private final List<User> users = new ArrayList<>();
 
-    @Autowired
-    public UserRepository(CreatorRepository creatorRepository) {
-        store(new User(0L, "user", "user",
-                Status.CUSTOMER, "IM PAYING"));
-
-        User admin = new User(1L, "admin", "admin",
-                Status.SUPPLIER, "MONEYZ", 1L);
-        store(admin);
-        creatorRepository.store(admin);
-
-        User creator = new User(2L, "creator", "creator",
-                Status.SUPPLIER, "I CREATE STUFF", 2L);
-        store(creator);
-        creatorRepository.store(creator);
-    }
-
     @Override
     public void store(User user) {
         users.add(user);
