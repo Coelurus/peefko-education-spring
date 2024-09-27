@@ -3,6 +3,7 @@ package pfko.vopalensky.spring.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,8 @@ import pfko.vopalensky.spring.model.Status;
 import pfko.vopalensky.spring.repository.UserRepository;
 
 import java.util.List;
+
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +42,10 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/offer").permitAll()
+                        .requestMatchers(antMatcher(HttpMethod.GET, "/offer")).permitAll()
+                        .requestMatchers("/offer").hasRole(Status.SUPPLIER.toString())
+                        .requestMatchers("/order/my").authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/order")).authenticated()
                         .requestMatchers("/order").hasRole(Status.SUPPLIER.toString())
                         .anyRequest().authenticated()
                 )

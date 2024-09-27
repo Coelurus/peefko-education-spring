@@ -129,23 +129,23 @@ class ApplicationTests {
         mockMvc.perform(get("/order/0")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":0,\"offer\":{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":true}"));
+                .andExpect(content().string("{\"id\":0,\"offer\":{\"id\":1,\"name\":\"Changed\",\"cost\":1001,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"supplier"})
+    @WithMockUser(username = "user", roles = {"customer"})
     void testUpdateOrderWithForm() throws Exception {
         mockMvc.perform(formLogin("/login")
-                .user("username", "admin")
-                .password("password", "admin")
+                .user("username", "user")
+                .password("password", "user")
                 .acceptMediaType(MediaType.APPLICATION_JSON));
 
         mockMvc.perform(post("/order/0")
                         .param("complete", "true")
-                        .param("payed", "true")
+                        .param("payed", "false")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":0,\"offer\":{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":true}"));
+                .andExpect(content().string("{\"id\":0,\"offer\":{\"id\":1,\"name\":\"PutChange\",\"cost\":696,\"services\":[{\"id\":1,\"name\":\"COFFEE SERVICE\",\"description\":\"I drink all your milk\"}],\"created\":{\"id\":0,\"leader\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"members\":[{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},{\"id\":1,\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"}]}},\"customer\":{\"id\":0,\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
     }
 
     @Test
