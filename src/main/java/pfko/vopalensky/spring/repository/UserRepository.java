@@ -2,7 +2,6 @@ package pfko.vopalensky.spring.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import pfko.vopalensky.spring.model.CreatorType;
 import pfko.vopalensky.spring.model.Status;
 import pfko.vopalensky.spring.model.User;
 

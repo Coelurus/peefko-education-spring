@@ -13,6 +13,7 @@ import pfko.vopalensky.spring.response.OrderResponse;
 import pfko.vopalensky.spring.response.UserResponse;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -128,6 +129,22 @@ public class OrderService {
         return orderRepository.findAll().stream()
                 .map(this::getOrderResponse)
                 .toList();
+    }
+
+
+    /**
+     * Return all orders of currently logged-in user
+     *
+     * @return List of orders of current user
+     */
+    public ResponseEntity<List<OrderResponse>> getMyOrders() {
+        String currentUsername = userService.getCurrentUsername();
+
+        List<OrderResponse> responses = getAllResponses().stream()
+                .filter(or -> Objects.equals(or.getCustomer().getUserName(), currentUsername))
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 }
 

@@ -2,7 +2,6 @@ package pfko.vopalensky.spring.repository;
 
 import org.springframework.stereotype.Repository;
 import pfko.vopalensky.spring.model.Creator;
-import pfko.vopalensky.spring.model.SupplierTeam;
 
 import java.util.ArrayList;
 import java.util.List;

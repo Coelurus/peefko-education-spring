@@ -76,4 +76,9 @@ public class OrderApiController {
     public ResponseEntity<Void> deleteOrder(@PathVariable("orderId") Long orderId) {
         return orderService.deleteOrder(orderId);
     }
+
+    @GetMapping(value = "/order/my")
+    public ResponseEntity<List<OrderResponse>> getMyOrders() {
+        return orderService.getMyOrders();
+    }
 }

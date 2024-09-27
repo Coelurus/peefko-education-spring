@@ -43,10 +43,6 @@ paths:
           description: Invalid input
         "422":
           description: Validation exception
-      security:
-        - offer_board_auth:
-            - write:offers
-            - read:offers
     put:
       tags:
         - offer
@@ -79,10 +75,6 @@ paths:
           description: Offer not found
         "422":
           description: Validation exception
-      security:
-        - offer_board_auth:
-            - write:offers
-            - read:offers
     get:
       tags:
         - offer
@@ -132,9 +124,6 @@ paths:
           description: Invalid ID supplied
         "404":
           description: Offer not found
-      security:
-        - offer_board_auth:
-            - read:offers
     delete:
       tags:
         - offer
@@ -152,10 +141,6 @@ paths:
       responses:
         "400":
           description: Invalid offer id
-      security:
-        - offer_board_auth:
-            - write:offers
-            - read:offers
     post:
       tags:
         - offer
@@ -205,10 +190,6 @@ paths:
                 $ref: "#/components/schemas/Offer"
         "400":
           description: Invalid input
-      security:
-        - offer_board_auth:
-            - write:offers
-            - read:offers
   /order:
     get:
       tags:
@@ -332,32 +313,29 @@ paths:
       responses:
         "400":
           description: Invalid input
-  /user:
-    post:
+
+  /order/my:
+    get:
       tags:
-        - user
-      summary: Create user
-      description: Create user
-      operationId: createUser
-      requestBody:
-        description: Created user object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/User"
+        - board
+      summary: Get orders of signed in user
+      description: Check which user is signed in and return all his orders
+      operationId: getMyOrders
       responses:
-        default:
-          description: successful operation
+        "200":
+          description: sucessful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
             application/xml:
               schema:
-                $ref: "#/components/schemas/User"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+
   /login:
     post:
       tags:
@@ -402,7 +380,7 @@ paths:
         - user
       summary: Logs out current logged in user session
       operationId: logoutUser
-      parameters: [ ]
+      parameters: []
       responses:
         default:
           description: successful operation
@@ -517,7 +495,7 @@ components:
           example: 89q33rh9OAOa39R
         status:
           type: string
-          enum: [ customer, supplier ]
+          enum: [customer, supplier]
         name:
           type: string
           example: Mardi Mareda
@@ -553,18 +531,3 @@ components:
         application/xml:
           schema:
             $ref: "#/components/schemas/Offer"
-
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
-
-    offer_board_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://education.swagger.io/oauth/authorize
-          scopes:
-            write:offers: modify offers on board
-            read:offers: read offers from board
