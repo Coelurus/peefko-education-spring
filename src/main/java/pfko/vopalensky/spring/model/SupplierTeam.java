@@ -9,8 +9,9 @@ import java.util.List;
 @Data
 public class SupplierTeam extends Creator {
     private final Long id;
-    private Long leaderId;
-    private List<Long> members;
+    private final Long leaderId;
+    private final
+    List<Long> members;
 
     public SupplierTeam(Long id, Long leaderId, List<Long> members,
                         Long creatorId) {

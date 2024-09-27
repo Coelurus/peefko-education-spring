@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class APIException extends RuntimeException {
-    private final String code;
-    private final String field;
+    protected final String code;
+    protected final String field;
 }
