@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pfko.vopalensky.spring.error.exception.AuthenticationException;
 import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Order;
@@ -85,14 +86,24 @@ public class OrderService {
      * @param payed     Payment status of an order
      * @return Response object of updated order
      */
-    public ResponseEntity<OrderResponse> updateOrderWithForm(Long orderId, Boolean completed, Boolean payed) {
+    public ResponseEntity<OrderResponse> updateOrderWithForm(
+            Long orderId, Boolean completed, Boolean payed) {
         try {
             Order order = orderRepository.get(orderId);
             if (order == null) {
                 throw new NotFoundException(SCOPE);
             }
-            order.setCompleted(completed);
-            order.setPayed(payed);
+
+            if (userService.isCurrentlyLoggedIn(order.getCustomerId())) {
+                order.setCompleted(completed);
+            } else {
+                throw new AuthenticationException("NOT_HIS_ORDER");
+            }
+
+            if (userService.isThisSupplier()) {
+                order.setPayed(payed);
+            }
+
             return ResponseEntity.ok(getOrderResponse(order));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
@@ -138,10 +149,8 @@ public class OrderService {
      * @return List of orders of current user
      */
     public ResponseEntity<List<OrderResponse>> getMyOrders() {
-        String currentUsername = userService.getCurrentUsername();
-
         List<OrderResponse> responses = getAllResponses().stream()
-                .filter(or -> Objects.equals(or.getCustomer().getUserName(), currentUsername))
+                .filter(or -> userService.isCurrentlyLoggedIn(or.getCustomer().getUserName()))
                 .toList();
 
         return ResponseEntity.ok(responses);
