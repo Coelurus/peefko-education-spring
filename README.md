@@ -6,6 +6,7 @@ Aplikace nemá žádný frontend, ale pouze BE a ovládá se pomocí REST rozhra
 ## Progression
 
 - Data model created
-  ![image](./documentation/education-java-spring-fv.png)
+- ![image](./documentation/education-java-spring-fv.png)
 - Swagger created: [here](documentation/openapi3_0.yaml)
 - Task 4 finished - *waiting for review*
+- Task 5 finished - *waiting for review*
