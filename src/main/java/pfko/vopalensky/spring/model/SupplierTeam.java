@@ -1,24 +1,33 @@
 package pfko.vopalensky.spring.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SupplierTeam extends Creator {
-    private final Long id;
-    private final Long leaderId;
-    private final
-    List<Long> members;
+@Entity
+@Table(name = "teams")
+@NoArgsConstructor
+public class SupplierTeam {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-    public SupplierTeam(Long id, Long leaderId, List<Long> members,
-                        Long creatorId) {
-        this.id = id;
-        this.leaderId = leaderId;
-        this.members = members;
-        this.creatorId = creatorId;
-        this.creatorType = CreatorType.TEAM;
-    }
+    @OneToOne(optional = false)
+    @JoinColumn(name = "leader_id", nullable = false)
+    private User leader;
+
+    @OneToMany(mappedBy = "team")
+    private List<User> members;
 }

@@ -1,10 +1,12 @@
 package pfko.vopalensky.spring.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class TeamResponse implements CreatorResponse {
+    @JsonIgnore
     @JsonProperty("id")
     private final long id;
     @JsonProperty("leader")

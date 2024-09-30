@@ -9,12 +9,12 @@ import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Order;
 import pfko.vopalensky.spring.repository.OrderRepository;
+import pfko.vopalensky.spring.request.OrderRequest;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.response.OrderResponse;
 import pfko.vopalensky.spring.response.UserResponse;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -47,12 +47,18 @@ public class OrderService {
     /**
      * Save new order into db
      *
-     * @param order Order to be saved
+     * @param orderRequest Request for order object to be saved
      * @return Response object with new order
      */
-    public ResponseEntity<OrderResponse> placeOrder(Order order) {
+    public ResponseEntity<OrderResponse> placeOrder(OrderRequest orderRequest) {
+        Order order = new Order(
+                offerService.getOfferById(orderRequest.getOfferId()),
+                userService.getUserById(orderRequest.getUserId()),
+                orderRequest.getCompleted(),
+                orderRequest.getPayed()
+        );
         try {
-            orderRepository.store(order);
+            orderRepository.save(order);
             return ResponseEntity.ok(getOrderResponse(order));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
@@ -67,12 +73,9 @@ public class OrderService {
      */
     public ResponseEntity<OrderResponse> getOrderById(Long orderId) {
         try {
-            Order found = orderRepository.get(orderId);
-            if (found != null) {
-                return ResponseEntity.ok(getOrderResponse(found));
-            } else {
-                throw new NotFoundException(SCOPE);
-            }
+            Order found = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new NotFoundException(SCOPE));
+            return ResponseEntity.ok(getOrderResponse(found));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -89,12 +92,10 @@ public class OrderService {
     public ResponseEntity<OrderResponse> updateOrderWithForm(
             Long orderId, Boolean completed, Boolean payed) {
         try {
-            Order order = orderRepository.get(orderId);
-            if (order == null) {
-                throw new NotFoundException(SCOPE);
-            }
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new NotFoundException(SCOPE));
 
-            if (userService.isCurrentlyLoggedIn(order.getCustomerId())) {
+            if (userService.isCurrentlyLoggedIn(order.getCustomer().getId())) {
                 order.setCompleted(completed);
             } else {
                 throw new AuthenticationException("NOT_HIS_ORDER");
@@ -117,23 +118,24 @@ public class OrderService {
      * @return ok response
      */
     public ResponseEntity<Void> deleteOrder(Long orderId) {
-        orderRepository.delete(orderId);
+        orderRepository.deleteById(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public OrderResponse getOrderResponse(Order order) {
         OfferResponse offerResponse =
-                offerService.getOfferResponse(order.getOfferId());
+                offerService.getOfferResponse(order.getOffer());
 
         UserResponse userResponse =
-                userService.getUserResponse(order.getCustomerId());
+                userService.getUserResponse(order.getCustomer());
 
         return new OrderResponse(order.getId(), offerResponse, userResponse,
                 order.isCompleted(), order.isPayed());
     }
 
     public OrderResponse getOrderResponse(Long orderId) {
-        return getOrderResponse(orderRepository.get(orderId));
+        return getOrderResponse(orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException(SCOPE)));
     }
 
     public List<OrderResponse> getAllResponses() {

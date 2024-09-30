@@ -1,15 +1,16 @@
 package pfko.vopalensky.spring.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import pfko.vopalensky.spring.model.Status;
 
 @Getter
 @Data
 @AllArgsConstructor
 public class UserResponse implements CreatorResponse {
+    @JsonIgnore
     @JsonProperty("id")
     private long id;
 
@@ -17,7 +18,7 @@ public class UserResponse implements CreatorResponse {
     private String userName;
 
     @JsonProperty("status")
-    private Status status;
+    private String status;
 
     @JsonProperty("name")
     private String name;

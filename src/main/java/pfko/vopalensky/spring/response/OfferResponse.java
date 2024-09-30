@@ -1,5 +1,6 @@
 package pfko.vopalensky.spring.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Getter
 public class OfferResponse {
+    @JsonIgnore
     @JsonProperty("id")
     private Long id;
 

@@ -5,9 +5,7 @@ Aplikace nemá žádný frontend, ale pouze BE a ovládá se pomocí REST rozhra
 
 ## Progression
 
-- Data model created (needs review(i dnot know what im doing))
+- Data model created
   ![image](./documentation/education-java-spring-fv.png)
 - Swagger created: [here](documentation/openapi3_0.yaml)
-- Declared API endpoints based on Swagger
-- DTOs created (if i understand what it means)
-- Adding repositories...
+- Task 4 finished - *waiting for review*

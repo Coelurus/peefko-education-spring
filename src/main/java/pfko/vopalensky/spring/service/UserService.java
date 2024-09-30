@@ -17,6 +17,7 @@ import java.util.Objects;
 public class UserService {
 
     private final UserRepository userRepository;
+    private static final String SCOPE = "USERS";
 
 
     @Autowired
@@ -33,7 +34,7 @@ public class UserService {
     public UserResponse getUserResponse(User user) {
         return new UserResponse(
                 user.getId(), user.getUserName(),
-                user.getStatus(), user.getName()
+                user.getStatus().toString(), user.getName()
         );
     }
 
@@ -44,7 +45,8 @@ public class UserService {
      * @return User response
      */
     public UserResponse getUserResponse(Long id) {
-        return getUserResponse(userRepository.get(id));
+        return getUserResponse(userRepository.findById(id)
+                .orElseThrow(() -> new AuthenticationException(SCOPE)));
     }
 
     /**
@@ -97,5 +99,16 @@ public class UserService {
 
         return authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals(Status.SUPPLIER.name()));
+    }
+
+    /**
+     * Find user in db by id
+     *
+     * @param id ID of user to be found in db
+     * @return User object of user with given id
+     */
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new AuthenticationException("User not found"));
     }
 }
