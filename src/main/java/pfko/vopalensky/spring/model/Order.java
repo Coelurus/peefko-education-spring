@@ -7,12 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Data
@@ -21,7 +19,7 @@ import lombok.ToString;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
     private long id;
 
@@ -43,12 +41,10 @@ public class Order {
     @Column(name = "payed", nullable = false)
     private boolean payed;
 
-    public Order(@JsonProperty("id") long id,
-                 @JsonProperty("offerId") Offer offer,
+    public Order(@JsonProperty("offerId") Offer offer,
                  @JsonProperty("customerId") User customer,
                  @JsonProperty("completed") boolean completed,
                  @JsonProperty("payed") boolean payed) {
-        this.id = id;
         this.offer = offer;
         this.customer = customer;
         this.completed = completed;

@@ -1,9 +1,9 @@
 package pfko.vopalensky.spring.model;
 
 public enum Status {
-    CUSTOMER("customer"),
+    CUSTOMER("CUSTOMER"),
 
-    SUPPLIER("supplier");
+    SUPPLIER("SUPPLIER");
 
     private final String value;
 

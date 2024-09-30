@@ -3,7 +3,7 @@ package pfko.vopalensky.spring.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pfko.vopalensky.spring.model.Order;
+import pfko.vopalensky.spring.request.OrderRequest;
 import pfko.vopalensky.spring.response.OrderResponse;
 import pfko.vopalensky.spring.service.OrderService;
 
@@ -36,7 +36,7 @@ public class OrderApiController {
      * @return newly created order
      */
     @PostMapping(value = "/order", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<OrderResponse> placeOrder(@RequestBody Order order) {
+    public ResponseEntity<OrderResponse> placeOrder(@RequestBody OrderRequest order) {
         return orderService.placeOrder(order);
     }
 

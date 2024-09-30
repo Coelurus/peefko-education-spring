@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
+import pfko.vopalensky.spring.model.CreatorType;
+import pfko.vopalensky.spring.model.MyService;
 import pfko.vopalensky.spring.model.Offer;
 import pfko.vopalensky.spring.repository.OfferRepository;
-import pfko.vopalensky.spring.repository.ServiceRepository;
+import pfko.vopalensky.spring.request.OfferRequest;
+import pfko.vopalensky.spring.response.CreatorResponse;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.response.ServiceResponse;
 
@@ -19,19 +22,16 @@ public class OfferService {
     private static final String SCOPE = "Offer";
 
     private final OfferRepository offerRepository;
-    private final ServiceRepository serviceRepository;
     private final TeamService teamService;
     private final UserService userService;
     private final MyServiceService myServiceService;
 
     @Autowired
     public OfferService(OfferRepository offerRepository,
-                        ServiceRepository serviceRepository,
                         TeamService teamService,
                         UserService userService,
                         MyServiceService myServiceService) {
         this.offerRepository = offerRepository;
-        this.serviceRepository = serviceRepository;
         this.teamService = teamService;
         this.userService = userService;
         this.myServiceService = myServiceService;
@@ -49,13 +49,21 @@ public class OfferService {
     /**
      * Add new offer to a database
      *
-     * @param offer offer to be added
      * @return added offer
      */
-    public ResponseEntity<OfferResponse> addOffer(Offer offer) {
+    public ResponseEntity<OfferResponse> addOffer(OfferRequest offerRequest) {
+
+        List<MyService> services =
+                myServiceService.getServicesByIds(offerRequest.getServicesIds());
+        Offer newOffer = new Offer(
+                offerRequest.getName(),
+                offerRequest.getCost(),
+                services,
+                offerRequest.getCreatorType(),
+                offerRequest.getCreatorId());
         try {
-            offerRepository.store(offer);
-            return ResponseEntity.ok(getOfferResponse(offer));
+            offerRepository.save(newOffer);
+            return ResponseEntity.ok(getOfferResponse(newOffer));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
         }
@@ -69,14 +77,14 @@ public class OfferService {
      */
     public ResponseEntity<OfferResponse> updateOffer(Offer offer) {
         try {
-            Offer toChange = offerRepository.get(offer.getId());
-            if (toChange == null) {
-                throw new NotFoundException(SCOPE);
-            }
+            Offer toChange = offerRepository.findById(offer.getId())
+                    .orElseThrow(() -> new NotFoundException(SCOPE));
+
             toChange.setName(offer.getName());
             toChange.setCost(offer.getCost());
-            //toChange.setServicesIds(offer.getServicesIds());
+            toChange.setServices(offer.getServices());
             toChange.setCreatorId(offer.getCreatorId());
+            offerRepository.save(toChange);
             return ResponseEntity.ok(getOfferResponse(toChange));
         } catch (Exception e) {
             throw new FieldValidationException(SCOPE);
@@ -90,7 +98,7 @@ public class OfferService {
      * @return response ok
      */
     public ResponseEntity<Void> deleteOffer(Long offerId) {
-        offerRepository.delete(offerId);
+        offerRepository.deleteById(offerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -100,11 +108,9 @@ public class OfferService {
      * @param offerId ID to find offer by
      * @return found offer
      */
-    public ResponseEntity<OfferResponse> getOfferById(Long offerId) {
-        Offer found = offerRepository.get(offerId);
-        if (found == null) {
-            throw new NotFoundException(SCOPE);
-        }
+    public ResponseEntity<OfferResponse> getOfferResponseById(Long offerId) {
+        Offer found = offerRepository.findById(offerId)
+                .orElseThrow(() -> new NotFoundException(SCOPE));
         return ResponseEntity.ok(getOfferResponse(found));
     }
 
@@ -118,12 +124,11 @@ public class OfferService {
      * @param created  ID of worker/team that created this offer
      */
     public ResponseEntity<OfferResponse> updateOfferWithForm(
-            Long offerId, String name, Long cost, List<Long> services, Long created) {
+            Long offerId, String name, Long cost,
+            List<MyService> services, Long created) {
         try {
-            Offer toChange = offerRepository.get(offerId);
-            if (toChange == null) {
-                throw new NotFoundException(SCOPE);
-            }
+            Offer toChange = offerRepository.findById(offerId)
+                    .orElseThrow(() -> new NotFoundException(SCOPE));
             if (name != null) {
                 toChange.setName(name);
             }
@@ -131,7 +136,7 @@ public class OfferService {
                 toChange.setCost(cost);
             }
             if (services != null) {
-                //toChange.setServicesIds(services);
+                toChange.setServices(services);
             }
             if (created != null) {
                 toChange.setCreatorId(created);
@@ -154,19 +159,17 @@ public class OfferService {
                         .map(myServiceService::getServiceResponse)
                         .toList();
 
-        /*
         CreatorResponse creatorResponse;
-        if (creator.getCreatorType() == CreatorType.INDIVIDUAL) {
-            creatorResponse = userService.getUserResponse((User) creator);
+        if (offer.getCreatorType() == CreatorType.INDIVIDUAL) {
+            creatorResponse = userService.getUserResponse(offer.getCreatorId());
         } else {
-            creatorResponse = teamService.getTeamResponse((SupplierTeam) creator);
+            creatorResponse = teamService.getTeamResponse(offer.getCreatorId());
         }
 
-         */
 
         return new OfferResponse(
                 offer.getId(), offer.getName(), offer.getCost(),
-                services, null);
+                services, creatorResponse);
     }
 
     /**
@@ -176,7 +179,8 @@ public class OfferService {
      * @return Offer response entity
      */
     public OfferResponse getOfferResponse(Long offerId) {
-        return getOfferResponse(offerRepository.get(offerId));
+        return getOfferResponse(offerRepository.findById(offerId)
+                .orElseThrow(() -> new NotFoundException(SCOPE)));
     }
 
     /**
@@ -188,5 +192,10 @@ public class OfferService {
         return offerRepository.findAll().stream()
                 .map(this::getOfferResponse)
                 .toList();
+    }
+
+    public Offer getOfferById(Long id) {
+        return offerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(SCOPE));
     }
 }

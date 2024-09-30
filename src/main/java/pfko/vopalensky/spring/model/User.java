@@ -3,12 +3,13 @@ package pfko.vopalensky.spring.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,8 +35,9 @@ public class User {
     private String password;
 
     @JsonProperty("status")
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private Status status;
 
     @JsonProperty("name")
     @Column(name = "name", nullable = false)
@@ -46,9 +48,8 @@ public class User {
     @JoinColumn(name = "team_id")
     private SupplierTeam team;
 
-    // TEMPORARY DIVISION BASED ON USER X SUPPLIER
     public User(Long id, String userName, String password,
-                String status, String name) {
+                Status status, String name) {
         this.id = id;
         this.userName = userName;
         this.password = password;

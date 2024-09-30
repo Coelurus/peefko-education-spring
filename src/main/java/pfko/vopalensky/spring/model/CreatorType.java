@@ -1,9 +1,9 @@
 package pfko.vopalensky.spring.model;
 
 public enum CreatorType {
-    INDIVIDUAL("individual"),
+    INDIVIDUAL("INDIVIDUAL"),
 
-    TEAM("team");
+    TEAM("TEAM");
 
     private final String value;
 

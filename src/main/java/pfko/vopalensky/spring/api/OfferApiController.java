@@ -3,7 +3,9 @@ package pfko.vopalensky.spring.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pfko.vopalensky.spring.model.MyService;
 import pfko.vopalensky.spring.model.Offer;
+import pfko.vopalensky.spring.request.OfferRequest;
 import pfko.vopalensky.spring.response.OfferResponse;
 import pfko.vopalensky.spring.service.OfferService;
 
@@ -33,12 +35,12 @@ public class OfferApiController {
     /**
      * Create new offer
      *
-     * @param offer New offer
+     * @param offerRequest Object representing new Offer to be created
      * @return Newly created offer
      */
     @PostMapping(value = "/offer", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<OfferResponse> addOffer(@RequestBody Offer offer) {
-        return offerService.addOffer(offer);
+    public ResponseEntity<OfferResponse> addOffer(@RequestBody OfferRequest offerRequest) {
+        return offerService.addOffer(offerRequest);
     }
 
 
@@ -71,7 +73,7 @@ public class OfferApiController {
      */
     @GetMapping(value = "/offer/{offerId}", produces = "application/json")
     public ResponseEntity<OfferResponse> getOfferById(@PathVariable(name = "offerId") Long offerId) {
-        return offerService.getOfferById(offerId);
+        return offerService.getOfferResponseById(offerId);
     }
 
     /**
@@ -88,7 +90,7 @@ public class OfferApiController {
             @PathVariable(name = "offerId") Long offerId,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cost", required = false) Long cost,
-            @RequestParam(value = "services", required = false) List<Long> services,
+            @RequestParam(value = "services", required = false) List<MyService> services,
             @RequestParam(value = "created", required = false) Long created) {
         return offerService.updateOfferWithForm(offerId, name, cost, services, created);
     }
