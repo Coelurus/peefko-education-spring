@@ -37,7 +37,7 @@ public class User {
     @JsonProperty("status")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status;
+    private Role role;
 
     @JsonProperty("name")
     @Column(name = "name", nullable = false)
@@ -49,11 +49,11 @@ public class User {
     private SupplierTeam team;
 
     public User(Long id, String userName, String password,
-                Status status, String name) {
+                Role role, String name) {
         this.id = id;
         this.userName = userName;
         this.password = password;
-        this.status = status;
+        this.role = role;
         this.name = name;
     }
 }

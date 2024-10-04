@@ -1,6 +1,6 @@
 package pfko.vopalensky.spring.model;
 
-public enum Status {
+public enum Role {
     CUSTOMER("CUSTOMER"),
 
     SUPPLIER("SUPPLIER");
@@ -8,7 +8,7 @@ public enum Status {
     private final String value;
 
 
-    Status(String value) {
+    Role(String value) {
         this.value = value;
     }
 

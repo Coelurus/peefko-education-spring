@@ -1,9 +1,12 @@
-package pfko.vopalensky.spring.security;
+package pfko.vopalensky.spring.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,8 +20,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import pfko.vopalensky.spring.model.Status;
+import pfko.vopalensky.spring.model.Role;
 import pfko.vopalensky.spring.repository.UserRepository;
+import pfko.vopalensky.spring.security.service.CustomUserDetailsService;
 
 import java.util.List;
 
@@ -31,14 +35,17 @@ public class WebSecurityConfig {
     private final UserRepository userRepository;
     private final AuthenticationEntryPoint authEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final CustomUserDetailsService userDetailsService;
 
     @Autowired
     public WebSecurityConfig(UserRepository userRepository,
                              AuthenticationEntryPoint authEntryPoint,
-                             AccessDeniedHandler accessDeniedHandler) {
+                             AccessDeniedHandler accessDeniedHandler,
+                             CustomUserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.authEntryPoint = authEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -47,12 +54,14 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(antMatcher(HttpMethod.GET, "/offer")).permitAll()
-                        .requestMatchers("/offer").hasRole(Status.SUPPLIER.toString())
+                        .requestMatchers("/offer").hasRole(Role.SUPPLIER.toString())
                         .requestMatchers("/order/my").authenticated()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/order")).authenticated()
-                        .requestMatchers("/order").hasRole(Status.SUPPLIER.toString())
+                        .requestMatchers("/order").hasRole(Role.SUPPLIER.toString())
                         .anyRequest().authenticated()
                 )
+                .authenticationManager(authenticationManager().)
+                .a
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
@@ -64,6 +73,13 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    private ReactiveAuthenticationManager authenticationManager() {
+        UserDetailsRepositoryReactiveAuthenticationManager authenticationManager
+                = new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
+        authenticationManager.setPasswordEncoder(passwordEncoder());
+        return authenticationManager;
+    }
+
     @Bean
     public UserDetailsService userDetailsService() {
 
@@ -72,9 +88,9 @@ public class WebSecurityConfig {
                 .stream()
                 .map(u -> User.withUsername(u.getUserName())
                         .password(u.getPassword())
-                        .roles(u.getStatus().toString())
+                        .roles(u.getRole().toString())
                         .build()).toList());
-        
+
         return new InMemoryUserDetailsManager(users);
     }
 

@@ -6,10 +6,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pfko.vopalensky.spring.error.exception.AuthenticationException;
-import pfko.vopalensky.spring.model.Status;
+import pfko.vopalensky.spring.error.exception.NotFoundException;
+import pfko.vopalensky.spring.model.Role;
 import pfko.vopalensky.spring.model.User;
 import pfko.vopalensky.spring.repository.UserRepository;
 import pfko.vopalensky.spring.response.UserResponse;
+import pfko.vopalensky.spring.security.model.CustomUserDetails;
 
 import java.util.Objects;
 
@@ -36,7 +38,7 @@ public class UserService {
     public UserResponse getUserResponse(User user) {
         return new UserResponse(
                 user.getId(), user.getUserName(),
-                user.getStatus().toString(), user.getName()
+                user.getRole().toString(), user.getName()
         );
     }
 
@@ -100,7 +102,7 @@ public class UserService {
         }
 
         return authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals(ROLE_PREFIX + Status.SUPPLIER.name()));
+                .anyMatch(r -> r.getAuthority().equals(ROLE_PREFIX + Role.SUPPLIER.name()));
     }
 
     /**
@@ -112,5 +114,30 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new AuthenticationException("User not found"));
+    }
+
+    /**
+     * Convert user from db to UserDetails for spring security
+     *
+     * @param user User object from db
+     * @return User details based on input user
+     */
+    public CustomUserDetails toUserDetails(User user) {
+        return new CustomUserDetails(
+                user.getUserName(),
+                user.getPassword(),
+                user.getRole().toString());
+    }
+
+    /**
+     * Convert user by username from db to UserDetails for spring security
+     *
+     * @param username Name of the user to convert
+     * @return User details based on input username
+     */
+    public CustomUserDetails getUserDetailsFromUsername(String username) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new NotFoundException("USER"));
+        return toUserDetails(user);
     }
 }
