@@ -92,12 +92,6 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-            <version>RELEASE</version>
-        </dependency>
     </dependencies>
 
     <build>

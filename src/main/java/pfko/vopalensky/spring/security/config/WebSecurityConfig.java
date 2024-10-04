@@ -60,8 +60,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/order").hasRole(Role.SUPPLIER.toString())
                         .anyRequest().authenticated()
                 )
-                .authenticationManager(authenticationManager().)
-                .a
+                .authenticationManager(authenticationManager())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
@@ -73,9 +72,9 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    private ReactiveAuthenticationManager authenticationManager() {
-        UserDetailsRepositoryReactiveAuthenticationManager authenticationManager
-                = new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
+    private AuthenticationManager authenticationManager() {
+        AuthenticationManager authenticationManager
+                = new AuthenticationManager(userDetailsService);
         authenticationManager.setPasswordEncoder(passwordEncoder());
         return authenticationManager;
     }
