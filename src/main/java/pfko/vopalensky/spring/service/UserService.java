@@ -16,6 +16,8 @@ import java.util.Objects;
 @Service
 public class UserService {
 
+    private static final String ROLE_PREFIX = "ROLE_";
+
     private final UserRepository userRepository;
     private static final String SCOPE = "USERS";
 
@@ -98,7 +100,7 @@ public class UserService {
         }
 
         return authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals(Status.SUPPLIER.name()));
+                .anyMatch(r -> r.getAuthority().equals(ROLE_PREFIX + Status.SUPPLIER.name()));
     }
 
     /**

@@ -117,7 +117,7 @@ class ApplicationTests {
         mockMvc.perform(get("/order/0")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"offer\":{\"name\":\"SECURITY\",\"cost\":2000,\"services\":[{\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"leader\":{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},\"members\":[{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},{\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}]}},\"customer\":{\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":false,\"payed\":false}"));
+                .andExpect(content().string("{\"id\":0,\"offer\":{\"name\":\"SECURITY\",\"cost\":2000,\"services\":[{\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"leader\":{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},\"members\":[{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},{\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}]}},\"customer\":{\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":false,\"payed\":false}"));
     }
 
     @Test
@@ -130,7 +130,7 @@ class ApplicationTests {
                 .content(orderString)
                 .header("Accept", "application/json"));
         result.andExpect(status().isOk())
-                .andExpect(content().string("{\"offer\":{\"name\":\"SECURITY\",\"cost\":2000,\"services\":[{\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"leader\":{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},\"members\":[{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},{\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}]}},\"customer\":{\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
+                .andExpect(content().string("{\"id\":2,\"offer\":{\"name\":\"SECURITY\",\"cost\":2000,\"services\":[{\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"leader\":{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},\"members\":[{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},{\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}]}},\"customer\":{\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
     }
 
     @Test
@@ -159,7 +159,7 @@ class ApplicationTests {
                         .param("payed", "false")
                         .header("Accept", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"offer\":{\"name\":\"SECURITY\",\"cost\":2000,\"services\":[{\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"leader\":{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},\"members\":[{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},{\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}]}},\"customer\":{\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
+                .andExpect(content().string("{\"id\":0,\"offer\":{\"name\":\"SECURITY\",\"cost\":2000,\"services\":[{\"name\":\"DESK INSPECTION\",\"description\":\"Dont even ask\"}],\"created\":{\"leader\":{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},\"members\":[{\"userName\":\"admin\",\"status\":\"SUPPLIER\",\"name\":\"MONEYZ\"},{\"userName\":\"creator\",\"status\":\"SUPPLIER\",\"name\":\"I CREATE STUFF\"}]}},\"customer\":{\"userName\":\"user\",\"status\":\"CUSTOMER\",\"name\":\"IM PAYING\"},\"completed\":true,\"payed\":false}"));
     }
 
 }

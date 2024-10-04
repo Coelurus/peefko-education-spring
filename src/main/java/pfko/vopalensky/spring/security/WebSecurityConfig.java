@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import pfko.vopalensky.spring.model.Status;
 import pfko.vopalensky.spring.repository.UserRepository;
 
@@ -29,12 +30,15 @@ public class WebSecurityConfig {
 
     private final UserRepository userRepository;
     private final AuthenticationEntryPoint authEntryPoint;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
     public WebSecurityConfig(UserRepository userRepository,
-                             AuthenticationEntryPoint authEntryPoint) {
+                             AuthenticationEntryPoint authEntryPoint,
+                             AccessDeniedHandler accessDeniedHandler) {
         this.userRepository = userRepository;
         this.authEntryPoint = authEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -54,7 +58,8 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint));
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler));
 
         return http.build();
     }

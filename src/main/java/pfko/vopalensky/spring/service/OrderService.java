@@ -3,8 +3,8 @@ package pfko.vopalensky.spring.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import pfko.vopalensky.spring.error.exception.AuthenticationException;
 import pfko.vopalensky.spring.error.exception.FieldValidationException;
 import pfko.vopalensky.spring.error.exception.NotFoundException;
 import pfko.vopalensky.spring.model.Order;
@@ -72,13 +72,18 @@ public class OrderService {
      * @return found order
      */
     public ResponseEntity<OrderResponse> getOrderById(Long orderId) {
-        try {
-            Order found = orderRepository.findById(orderId)
-                    .orElseThrow(() -> new NotFoundException(SCOPE));
-            return ResponseEntity.ok(getOrderResponse(found));
-        } catch (Exception e) {
-            throw new FieldValidationException(SCOPE);
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException(SCOPE));
+
+
+        if (userService.isCurrentlyLoggedIn(order.getCustomer().getId()) ||
+                userService.isThisSupplier()) {
+            return ResponseEntity.ok(getOrderResponse(order));
+        } else {
+            throw new AccessDeniedException("NOT_HIS_ORDER");
         }
+
     }
 
     /**
@@ -98,7 +103,7 @@ public class OrderService {
             if (userService.isCurrentlyLoggedIn(order.getCustomer().getId())) {
                 order.setCompleted(completed);
             } else {
-                throw new AuthenticationException("NOT_HIS_ORDER");
+                throw new AccessDeniedException("NOT_HIS_ORDER");
             }
 
             if (userService.isThisSupplier()) {
