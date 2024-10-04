@@ -47,7 +47,8 @@ public class OrderApiController {
      * @return Found order
      */
     @GetMapping(value = "/order/{orderId}", produces = "application/json")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable("orderId") Long orderId) {
+    public ResponseEntity<OrderResponse> getOrderById(
+            @PathVariable("orderId") Long orderId) {
         return orderService.getOrderById(orderId);
     }
 
