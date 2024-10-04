@@ -67,14 +67,14 @@ public class WebSecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
 
-        List<UserDetails> users = userRepository
+        List<UserDetails> users = new java.util.ArrayList<>(userRepository
                 .findAll()
                 .stream()
                 .map(u -> User.withUsername(u.getUserName())
-                        .password(passwordEncoder().encode(u.getPassword()))
+                        .password(u.getPassword())
                         .roles(u.getStatus().toString())
-                        .build()).toList();
-
+                        .build()).toList());
+        
         return new InMemoryUserDetailsManager(users);
     }
 
