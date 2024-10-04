@@ -6,9 +6,9 @@ VALUES (0, 'NAP', 'Like sleeping'),
        (2, 'DESK INSPECTION', 'Dont even ask');
 
 INSERT INTO users (id, username, password, status, name)
-VALUES (0, 'user', 'user', 'CUSTOMER', 'IM PAYING'),
-       (1, 'admin', 'admin', 'SUPPLIER', 'MONEYZ'),
-       (2, 'creator', 'creator', 'SUPPLIER', 'I CREATE STUFF');
+VALUES (0, 'user', '$2a$10$bn5VZttAU9R.t0kjqHMvyObBe7WgNTlQKjnrhkSHAAXnTmPjYIFIu', 'CUSTOMER', 'IM PAYING'),
+       (1, 'admin', '$2a$10$tr2M6phHFwYA7aUslseGgOFGZq9RPZ61NscCfuWa2WBqnnC.d9AZm', 'SUPPLIER', 'MONEYZ'),
+       (2, 'creator', '$2a$10$mzeho1bfdaTUhRPUGwP1weyRliR3IeyFWyCiPgUKpRPg3mm1mA.XG ', 'SUPPLIER', 'I CREATE STUFF');
 
 
 INSERT INTO teams (id, leader_id)
